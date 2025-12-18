@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  updateProfile,
 } from "firebase/auth";
 
 const auth = getAuth(app);
@@ -25,20 +26,22 @@ const AuthProvider = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  const logOut = async () => {
+  const logOut = () => {
     setLoading(true);
     return signOut(auth);
   };
 
   const updateUserProfile = (name, photo) => {
-    return updateUserProfile(auth.currentUser, {
+    return updateProfile(auth.currentUser, {
       displayName: name,
       photoURL: photo,
     });
   };
 
+  // onAuthStateChange
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      console.log("CurrentUser-->", currentUser?.email);
       setUser(currentUser);
       setLoading(false);
     });
@@ -46,7 +49,7 @@ const AuthProvider = ({ children }) => {
       return unsubscribe();
     };
   }, []);
-
+  
   const authInfo = {
     user,
     setUser,
