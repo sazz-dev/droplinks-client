@@ -22,9 +22,9 @@ const Navbar = () => {
   // Start Navigation
   const navItems = [
     { to: "/", label: "Home" },
-    { to: "/services", label: "Search Donors" },
-    { to: "/coverage", label: "Donation Requests" },
-    { to: "/about-us", label: "Contact Us" },
+    { to: "/search-donors", label: "Search Donors" },
+    { to: "/donation-requests", label: "Donation Requests" },
+    { to: "#contact-us", label: "Contact Us" },
   ];
 
   const baseLink = " text-lg transition-colors duration-200";

@@ -10,6 +10,13 @@ import Statistics from "../pages/Dashboard/Common/Statistics";
 import CreateRequest from "../pages/Dashboard/Common/CreateRequest";
 import ErrorPage from "../pages/ErrorPage";
 import Profile from "../pages/Dashboard/Common/Profile";
+import AllBloodRequests from "../pages/Dashboard/Common/AllBloodRequests";
+import Funding from "../pages/Dashboard/Common/Funding";
+import DonationRequests from "../pages/DonationRequests/DonationRequests";
+import SearchDonors from "../pages/SearchDonors/SearchDonors";
+import BloodRequestsDetails from "../components/BloodRequests/BloodRequestsDetails";
+import PaymentSuccess from "../components/Payment/PaymentSuccess";
+import MyBloodRequests from "../pages/Dashboard/Donor/MyBloodRequests";
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +27,22 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: "/donation-requests",
+        element: <DonationRequests />,
+      },
+      {
+        path: "/donation-requests/:id",
+        element: <BloodRequestsDetails />,
+      },
+      {
+        path: "/payment-success/",
+        element: <PaymentSuccess />,
+      },
+      {
+        path: "/search-donors",
+        element: <SearchDonors />,
       },
     ],
   },
@@ -42,6 +65,18 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/create-request",
         element: <CreateRequest />,
+      },
+      {
+        path: "/dashboard/all-blood-requests",
+        element: <AllBloodRequests />,
+      },
+      {
+        path: "/dashboard/my-blood-requests",
+        element: <MyBloodRequests />,
+      },
+      {
+        path: "/dashboard/funding",
+        element: <Funding />,
       },
       {
         path: "/dashboard/profile",

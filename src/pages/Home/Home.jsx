@@ -5,9 +5,12 @@ import heroImg from "/src/assets/hero-img.svg";
 import droplinksBox from "/src/assets/droplinksbox.svg";
 import actionImg from "/src/assets/actionImg.svg";
 import Icon from "../../components/Shared/Icon";
-import BloodRequestsCard from "../../components/BloodRequestsCard";
+import BloodRequestsCard from "../../components/BloodRequests/BloodRequestsCard";
 import FormInput from "../../components/Shared/FormInput";
 import { useForm } from "react-hook-form";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import LoadingSpinner from "../../components/Shared/LoadingSpinner";
 
 const Home = () => {
   const {
@@ -19,6 +22,22 @@ const Home = () => {
   const onSubmit = (data) => {
     console.log(data);
   };
+
+  const {
+    data: requests,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["requests"],
+    queryFn: async () => {
+      const result = await axios(
+        `${import.meta.env.VITE_API_URL}/donation-requests`
+      );
+      return result.data;
+    },
+  });
+  if (isError) return <LoadingSpinner />;
+
   return (
     <>
       <Container>
@@ -194,17 +213,21 @@ const Home = () => {
             </p>
           </div>
           <div className="w-fit mx-auto grid grid-cols-3 gap-8">
-            <BloodRequestsCard />
-            <BloodRequestsCard />
-            <BloodRequestsCard />
-            <BloodRequestsCard />
-            <BloodRequestsCard />
-            <BloodRequestsCard />
+            {isLoading
+              ? [...Array(3)].map((_, i) => <LoadingSpinner key={i} />)
+              : requests
+                  .slice(0, 3)
+                  .map((request) => (
+                    <BloodRequestsCard key={request._id} request={request} />
+                  ))}
           </div>
         </section>
       </Container>
       {/* Contact Us Section */}
-      <section className="w-7/12 mx-auto my-50 flex justify-center gap-18 ">
+      <section
+        id="contact-us"
+        className="w-7/12 mx-auto my-50 flex justify-center gap-18 "
+      >
         <div className="w-full flex flex-col justify-between">
           <div className="flex flex-col gap-3">
             <h2 className="text-xl text-[#F43F5E]">Contact Us</h2>

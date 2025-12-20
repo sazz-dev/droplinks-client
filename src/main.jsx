@@ -18,3 +18,5 @@ createRoot(document.getElementById("root")).render(
     </QueryClientProvider>
   </StrictMode>
 );
+
+window.__TANSTACK_QUERY_CLIENT__ = queryClient;

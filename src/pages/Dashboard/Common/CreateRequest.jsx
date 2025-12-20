@@ -23,6 +23,7 @@ const CreateRequest = () => {
     const requestData = {
       ...data,
       bagCount: Number(data.bagCount),
+      status: "Pending",
     };
 
     try {

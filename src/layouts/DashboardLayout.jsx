@@ -27,18 +27,23 @@ const DashboardLayout = () => {
     },
     {
       label: "All Blood Requests",
-      to: "/",
+      to: "/dashboard/all-blood-requests",
+      icon: <Icon name={"bloods-outline"} />,
+    },
+    {
+      label: "My Blood Requests",
+      to: "/dashboard/my-blood-requests",
       icon: <Icon name={"bloods-outline"} />,
     },
     {
       label: "Funding",
-      to: "/",
+      to: "/dashboard/funding",
       icon: <Icon name={"wallet-outline"} />,
     },
     {
       label: "Manage Users",
       to: "/dashboard/manage-users",
-      icon: <Icon name={"wallet-outline"} />,
+      icon: <Icon name={"users-outline"} />,
     },
   ];
   const generalNav = [
@@ -56,7 +61,7 @@ const DashboardLayout = () => {
   ];
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
-    <div className="flex bg-gray-100 h-screen overflow-hidden">
+    <div className="flex  bg-gray-100 h-screen overflow-hidden">
       {/* Sidebar */}
       <aside
         className={`fixed bg-white w-64 h-screen shadow ${
@@ -72,7 +77,7 @@ const DashboardLayout = () => {
           </button>
         </div>
         {/* Navigation Bar */}
-        <div className="flex flex-col gap-4 w-full pt-4 bg-white rounded-md">
+        <div className="flex  flex-col gap-4 w-full pt-4 bg-white rounded-md">
           {/* Menu Nav */}
           <div>
             <h6 className="text-sm  text-gray-500">MENU</h6>
@@ -151,8 +156,8 @@ const DashboardLayout = () => {
           </button>
           <h3>Dashboard</h3>
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full justify-center items-center bg-[#F5F5F5]">
-              <img src="" alt="" />
+            <div className="w-12 h-12 cursor-pointer rounded-full flex justify-center items-center bg-[#F5F5F5]">
+              <Icon size={25} name="notification-fill" />
             </div>
             <div className="flex items-center gap-2">
               <img

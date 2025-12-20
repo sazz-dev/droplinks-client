@@ -1,56 +1,135 @@
 import React from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
+import Icon from "../Shared/Icon";
 
-const RequestDetailsModal = ({ closeModal, isOpen }) => {
+const RequestDetailsModal = ({ closeModal, isOpen, request }) => {
+
+  const {
+    recipientName,
+    bloodGroup,
+    hospitalName,
+    donationDate,
+    addressLine,
+    recipientDistrict,
+    recipientUpazila,
+    requestMessage,
+    requesterName,
+    requesterEmail,
+  } = request || {};
   return (
     <Dialog
       open={isOpen}
       as="div"
-      className="relative z-10 focus:outline-none "
+      className="relative z-50 focus:outline-none "
       onClose={closeModal}
     >
-      <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div className="flex min-h-full items-center justify-center p-4">
-          <DialogPanel
-            transition
-            className="w-full max-w-md bg-white p-6 backdrop-blur-2xl duration-300 ease-out data-closed:transform-[scale(95%)] data-closed:opacity-0 shadow-xl rounded-2xl"
-          >
-            <DialogTitle
-              as="h3"
-              className="text-lg font-medium text-center leading-6 text-gray-900"
-            >
-              Review Info Before Purchase
-            </DialogTitle>
-            <div className="mt-2">
-              <p className="text-sm text-gray-500">Plant: Money Plant</p>
-            </div>
-            <div className="mt-2">
-              <p className="text-sm text-gray-500">Category: Indoor</p>
-            </div>
-            <div className="mt-2">
-              <p className="text-sm text-gray-500">Customer: PH</p>
-            </div>
+      <div className="fixed bg-black/40 inset-0 z-10 w-screen overflow-y-auto">
+        <div className="flex  min-h-full items-center justify-center p-4">
+          <DialogPanel>
+            <div className="min-h-screen  flex items-center justify-center p-4">
+              <div className="md:w-9/12 max-w-4xl bg-white rounded-4xl p-6 sm:p-8">
+                <div className="flex justify-between mb-8 pb-4 items-end border-b-2 border-black/10">
+                  <h3 className="text-2xl font-medium ">
+                    Donation Request Details
+                  </h3>
+                  <button
+                    type="button"
+                    className="w-10 h-10 cursor-pointer  bg-red-200 text-red-600 rounded-full text-lg font-medium  "
+                    onClick={closeModal}
+                  >
+                    X
+                  </button>
+                </div>
 
-            <div className="mt-2">
-              <p className="text-sm text-gray-500">Price: $ 120</p>
-            </div>
-            <div className="mt-2">
-              <p className="text-sm text-gray-500">Available Quantity: 5</p>
-            </div>
-            <div className="flex mt-2 justify-around">
-              <button
-                type="button"
-                className="cursor-pointer inline-flex justify-center rounded-md border border-transparent bg-green-100 px-4 py-2 text-sm font-medium text-green-900 hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
-              >
-                Pay
-              </button>
-              <button
-                type="button"
-                className="cursor-pointer inline-flex justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-900 hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
-                onClick={closeModal}
-              >
-                Cancel
-              </button>
+                {/* Header Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="flex flex-col gap-2">
+                    <p className="text-sm text-gray-500">Recipient Name</p>
+                    <p className="font-semibold text-lg">{recipientName}</p>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <p className="text-md text-black/60">Blood Group</p>
+                    <span className="inline-block w-fit mt-1 px-4 py-2 text-sm font-semibold text-white bg-rose-500 rounded-lg">
+                     {bloodGroup}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <p className="text-md text-black/60">Hospital Name</p>
+                    <p className="font-semibold flex gap-1 items-center">
+                      <Icon
+                        className="text-[#F43F5E]"
+                        name="hospital-outline"
+                      />{hospitalName}
+                      
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <p className="text-md text-black/60">Donation Time</p>
+
+                    <p className="font-semibold flex gap-1 items-center">
+                      <Icon className="text-[#F43F5E]" name="event-outline" />{" "}
+                    {donationDate}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Address */}
+                <div className=" flex flex-col gap-2 mt-6">
+                  <p className="text-md text-black/60">Full Address</p>
+                  <p className="flex   gap-1 items-center">
+                    <Icon className="text-[#F43F5E]" name="location-outline" />{" "}
+                    {addressLine}
+                  </p>
+                </div>
+
+                {/* Location Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
+                  <div className="flex flex-col gap-2">
+                    <p className="text-md text-black/60">District</p>
+                    <p className="font-semibold">{recipientDistrict}</p>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <p className="text-md text-black/60">Upazila</p>
+                    <p className="font-semibold">{recipientUpazila}</p>
+                  </div>
+                </div>
+
+                {/* Request Message */}
+                <div className="mt-6">
+                  <p className="text-md text-black/60">Request Message</p>
+                  <p className="font-light text-black/70 leading-relaxed mt-1">
+                 {requestMessage}
+                  </p>
+                </div>
+
+                {/* Requester Info */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
+                  <div>
+                    <p className="text-sm text-gray-500">Requester Name</p>
+                    <p className="font-semibold">{requesterName}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-gray-500">Requester Email</p>
+                    <p className="font-semibold">{requesterEmail}</p>
+                  </div>
+                </div>
+
+                {/* CTA */}
+                <div className="mt-8 flex flex-col items-center">
+                  <button className="w-full cursor-pointer bg-rose-500 hover:bg-rose-600 transition text-white font-semibold py-3 rounded-xl">
+                    Donate Now
+                  </button>
+                  <p className="text-md font-light w-85 text-center text-black/60 mt-2">
+                    Make sure you contact with requester number before click
+                    “Donate Now”
+                  </p>
+                </div>
+              </div>
             </div>
           </DialogPanel>
         </div>
