@@ -7,7 +7,7 @@ import Icon from "../../components/Shared/Icon";
 import { Link, useLoaderData, useLocation, useNavigate } from "react-router";
 import { imageUpload, saveOrUpdateUser } from "../../utils";
 import useAuth from "../../hooks/useAuth";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 const SignUp = () => {
   const { createUser, updateUserProfile, loading, setLoading } = useAuth();
@@ -41,31 +41,38 @@ const SignUp = () => {
     try {
       // 1. Upload image
       const imageURL = await imageUpload(image[0]);
+
       // 2. Create auth user
       const result = await createUser(email, password);
       console.log(result);
+
       // 3. Update auth profile
       await updateUserProfile(name, imageURL);
 
-      // 4. User object for MongoDB
+      // 4. Convert district/upazila IDs to names
+      const districtName = districts.find((d) => d.id === district)?.name;
+      const upazilaName = upazilas.find((u) => u.id === upazila)?.name;
+
+      // 5. Prepare user object for DB
       const userInfo = {
         name,
         email,
         image: imageURL,
         bloodGroup,
-        district,
-        upazila,
+        district: districtName,
+        upazila: upazilaName,
         role: "donor",
         status: "active",
       };
 
-      // 5. Save to MongoDB
+      // 6. Save to MongoDB
       await saveOrUpdateUser(userInfo);
 
       navigate(from, { replace: true });
       toast.success("Signup Successful");
     } catch (err) {
       console.error(err);
+      toast.error(err);
     } finally {
       setLoading(false);
     }

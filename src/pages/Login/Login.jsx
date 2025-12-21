@@ -5,8 +5,7 @@ import FormInput from "../../components/Shared/FormInput";
 import Logo from "/logo.svg";
 import { Link, Navigate, useLocation, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
-import { toast } from "react-toastify";
-import LoadingSpinner from "../../components/Shared/LoadingSpinner";
+import toast from "react-hot-toast";
 import { saveOrUpdateUser } from "../../utils";
 
 const Login = () => {

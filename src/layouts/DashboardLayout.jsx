@@ -9,10 +9,12 @@ import AdminMenu from "../components/Sidebar/Menu/AdminMenu";
 import VolunteerMenu from "../components/Sidebar/Menu/VolunteerMenu";
 import DonorMenu from "../components/Sidebar/Menu/DonorMenu";
 import FundAddModal from "../components/Modal/FundAddModal";
+import LoadingSpinner from "../components/Shared/LoadingSpinner";
 
 const DashboardLayout = () => {
   const { user, logOut } = useAuth();
   const { role, isRoleLoading } = useRole();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Modal Fund
   let [isOpen, setIsOpen] = useState(false);
@@ -31,7 +33,8 @@ const DashboardLayout = () => {
     setSelectedRequest(null);
   };
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  if (isRoleLoading) return <LoadingSpinner />;
+
   return (
     <div className="flex  bg-gray-100 h-screen overflow-hidden">
       {/* Sidebar */}

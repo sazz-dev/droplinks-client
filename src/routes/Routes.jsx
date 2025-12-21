@@ -36,11 +36,19 @@ export const router = createBrowserRouter([
       },
       {
         path: "/donation-requests/:id",
-        element: <BloodRequestsDetails />,
+        element: (
+          <PrivateRoute>
+            <BloodRequestsDetails />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/give-fund",
-        element: <GiveFund />,
+        element: (
+          <PrivateRoute>
+            <GiveFund />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/payment-success/",
@@ -58,7 +66,11 @@ export const router = createBrowserRouter([
 
   {
     path: "/dashboard",
-    element: <DashboardLayout />,
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
     children: [
       {
         index: true,
@@ -88,6 +100,7 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/profile",
         element: <Profile />,
+        loader: locationLoader,
       },
     ],
   },

@@ -1,93 +1,44 @@
 import { useState } from "react";
 import Icon from "../../../components/Shared/Icon";
-
-const requests = [
-  {
-    users: "Sarah Johnson",
-    email: "sarah@gmail.com",
-    role: "DONOR",
-    status: "ACTIVE",
-  },
-  {
-    users: "Sarah Johnson",
-    email: "sarah@gmail.com",
-    role: "ADMIN",
-    status: "BLOCKED",
-  },
-  {
-    users: "Sarah Johnson",
-    email: "sarah@gmail.com",
-    role: "VOLUNTEER",
-    status: "ACTIVE",
-  },
-  {
-    users: "Sarah Johnson",
-    email: "sarah@gmail.com",
-    role: "ADMIN",
-    status: "BLOCKED",
-  },
-  {
-    users: "Sarah Johnson",
-    email: "sarah@gmail.com",
-    role: "VOLUNTEER",
-    status: "ACTIVE",
-  },
-  {
-    users: "Sarah Johnson",
-    email: "sarah@gmail.com",
-    role: "ADMIN",
-    status: "BLOCKED",
-  },
-  {
-    users: "Sarah Johnson",
-    email: "sarah@gmail.com",
-    role: "VOLUNTEER",
-    status: "ACTIVE",
-  },
-  {
-    users: "Sarah Johnson",
-    email: "sarah@gmail.com",
-    role: "ADMIN",
-    status: "BLOCKED",
-  },
-  {
-    users: "Sarah Johnson",
-    email: "sarah@gmail.com",
-    role: "VOLUNTEER",
-    status: "ACTIVE",
-  },
-  {
-    users: "Sarah Johnson",
-    email: "sarah@gmail.com",
-    role: "ADMIN",
-    status: "BLOCKED",
-  },
-  {
-    users: "Sarah Johnson",
-    email: "sarah@gmail.com",
-    role: "VOLUNTEER",
-    status: "ACTIVE",
-  },
-];
-
-/* ================= STYLES ================= */
-
-const roleStyles = {
-  ADMIN: "bg-[#C0D1FF] text-black/70",
-  DONOR: "bg-[#A9EFFF] text-black/70",
-  VOLUNTEER: "bg-[#A9F7E8] text-black/70",
-};
-
-const statusStyles = {
-  ACTIVE: "bg-[#A9FFD8] text-black/70",
-  BLOCKED: "bg-[#FFA9A9] text-black/70",
-};
+import RoleUpdateModal from "../../../components/Modal/RoleUpdateModal";
+import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/UseAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 const ManageUsers = () => {
-  const [openMenu, setOpenMenu] = useState(null);
+  const [isRoleOpen, setIsRoleOpen] = useState(false);
+  const [roleRequest, setRoleRequest] = useState(null);
 
-  const toggleMenu = (index) => {
-    setOpenMenu(openMenu === index ? null : index);
+  const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
+
+  const {
+    data: users = [],
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["users", user?.email],
+    queryFn: async () => {
+      const result = await axiosSecure(`/users`);
+      return result.data;
+    },
+  });
+  console.log(users);
+
+  const closeModal = () => {
+    setIsRoleOpen(false);
+    setRoleRequest(null);
+  };
+
+  const roleStyles = {
+    admin: "bg-[#C0D1FF] uppercase text-black/70",
+    donor: "bg-[#A9EFFF] uppercase text-black/70",
+    volunteer: "bg-[#A9F7E8] uppercase text-black/70",
+  };
+
+  const statusStyles = {
+    active: "bg-[#A9FFD8] uppercase text-black/70",
+    blocked: "bg-[#FFA9A9] uppercase text-black/70",
   };
 
   return (
@@ -149,68 +100,53 @@ const ManageUsers = () => {
           </thead>
 
           <tbody>
-            {requests.map((item, index) => (
+            {users.map((user, index) => (
               <tr
                 key={index}
                 className="border-b border-black/5 hover:bg-gray-50 text-lg"
               >
-                <td className="py-4 px-3 font-medium text-[#383c45]">
-                    
-                  {item.users}
+                <td className="py-4 px-3 flex items-center gap-2 font-medium text-[#383c45]">
+                  <img
+                    className="w-14 h-14 rounded-full"
+                    src={user.image}
+                    alt=""
+                  />
+                  {user.name}
                 </td>
 
-                <td className="px-3 text-[#565D6A]">{item.email}</td>
+                <td className="px-3 text-[#565D6A]">{user.email}</td>
 
                 <td className="px-3">
                   <span
                     className={`px-3 py-2 rounded-lg text-sm font-semibold ${
-                      roleStyles[item.role]
+                      roleStyles[user.role]
                     }`}
                   >
-                    {item.role}
+                    {user.role}
                   </span>
                 </td>
 
                 <td className="px-3">
                   <span
                     className={`px-3 py-2 rounded-lg text-sm font-semibold ${
-                      statusStyles[item.status]
+                      statusStyles[user.status]
                     }`}
                   >
-                    {item.status}
+                    {user.status}
                   </span>
                 </td>
 
                 {/* ===== ACTION MENU ===== */}
                 <td className="px-3 text-center relative">
                   <button
-                    onClick={() => toggleMenu(index)}
+                    onClick={() => {
+                      setRoleRequest();
+                      setIsRoleOpen(true);
+                    }}
                     className="p-2 hover:bg-gray-100 cursor-pointer text-black/50 rounded-lg"
                   >
                     <Icon size={30} name="three-dots-circle" />
                   </button>
-
-                  {openMenu === index && (
-                    <div className="flex flex-col absolute right-20 top-10 z-20 w-48 bg-white border border-black/10 rounded-xl shadow-lg">
-                      <button className="w-full text-left rounded-xl  cursor-pointer  px-4 py-2 hover:bg-gray-50">
-                        {item.status === "ACTIVE"
-                          ? "Block user"
-                          : "Unblock user"}
-                      </button>
-
-                      {item.role !== "VOLUNTEER" && (
-                        <button className="w-full text-left rounded-xl  cursor-pointer  px-4 py-2 hover:bg-gray-50">
-                          Make Volunteer
-                        </button>
-                      )}
-
-                      {item.role !== "ADMIN" && (
-                        <button className="w-full cursor-pointer rounded-xl  text-left px-4 py-2 hover:bg-gray-50">
-                          Make Admin
-                        </button>
-                      )}
-                    </div>
-                  )}
                 </td>
               </tr>
             ))}
@@ -220,7 +156,7 @@ const ManageUsers = () => {
 
       {/* ================= MOBILE CARDS ================= */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden px-5">
-        {requests.map((item, index) => (
+        {users.map((item, index) => (
           <div
             key={index}
             className="border border-black/5 rounded-lg p-4 relative"
@@ -246,28 +182,22 @@ const ManageUsers = () => {
             </div>
 
             <button
-              onClick={() => toggleMenu(index)}
+              onClick={() => {
+                setRoleRequest();
+                setIsRoleOpen(true);
+              }}
               className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100"
             >
               <Icon size={30} name="three-dots-circle" />
             </button>
-
-            {openMenu === index && (
-              <div className="absolute right-4 top-14 z-20 w-48 bg-white border border-black/10 rounded-xl shadow-lg">
-                <button className="w-full text-left rounded-xl  px-4 py-2 hover:bg-gray-50">
-                  {item.status === "ACTIVE" ? "Block user" : "Unblock user"}
-                </button>
-                <button className="w-full rounded-xl  text-left px-4 py-2 hover:bg-gray-50">
-                  Make Volunteer
-                </button>
-                <button className="w-full rounded-xl  text-left px-4 py-2 hover:bg-gray-50">
-                  Make Admin
-                </button>
-              </div>
-            )}
           </div>
         ))}
       </div>
+      <RoleUpdateModal
+        isOpen={isRoleOpen}
+        closeModal={closeModal}
+        request={roleRequest}
+      />
     </div>
   );
 };

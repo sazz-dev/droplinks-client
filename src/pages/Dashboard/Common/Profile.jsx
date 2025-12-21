@@ -5,10 +5,12 @@ import FormInput from "../../../components/Shared/FormInput";
 import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 import Icon from "../../../components/Shared/Icon";
 import useRole from "../../../hooks/useRole";
+import { useLoaderData } from "react-router";
 
 const Profile = () => {
+   const { districts, upazilas } = useLoaderData();
   const { user, loading } = useAuth();
-  const { role, isRoleLoading } = useRole();
+  const { role } = useRole();
 
   // console.log(role, isRoleLoading);
 

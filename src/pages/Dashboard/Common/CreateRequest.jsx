@@ -26,23 +26,34 @@ const CreateRequest = () => {
   );
 
   const onSubmit = async (data) => {
-    const requestData = {
-      ...data,
-      bagCount: Number(data.bagCount),
-      status: "Pending",
-    };
-
     try {
-      const { data } = await axios.post(
+      // Convert district/upazila IDs to names
+      const districtName = districts.find(
+        (d) => d.id === data.recipientDistrict
+      )?.name;
+      const upazilaName = upazilas.find(
+        (u) => u.id === data.recipientUpazila
+      )?.name;
+
+      const requestData = {
+        ...data,
+        recipientDistrict: districtName,
+        recipientUpazila: upazilaName,
+        bagCount: Number(data.bagCount),
+        status: "Pending",
+      };
+
+      const { data: response } = await axios.post(
         `${import.meta.env.VITE_API_URL}/donation-requests`,
         requestData
       );
+
       toast.success("Blood Request Created");
       reset();
-      console.log(data);
+      console.log(response);
     } catch (err) {
-      toast.error(err);
-      console.log(err);
+      toast.error(err?.response?.data?.message || "Failed to create request");
+      console.error(err);
     }
   };
 
@@ -144,7 +155,7 @@ const CreateRequest = () => {
                   id="recipientDistrict"
                   name="recipientDistrict"
                   as="select"
-                  placeholder="Select a blood"
+                  placeholder="Select a District"
                   register={register}
                   rules={{ required: "District is required" }}
                   error={errors.recipientDistrict}
@@ -158,7 +169,7 @@ const CreateRequest = () => {
                   id="recipientUpazila"
                   name="recipientUpazila"
                   as="select"
-                  placeholder="Select a blood"
+                  placeholder="Select a Upazila"
                   register={register}
                   rules={{ required: "Upazila is required" }}
                   error={errors.recipientUpazila}
