@@ -17,6 +17,8 @@ import SearchDonors from "../pages/SearchDonors/SearchDonors";
 import BloodRequestsDetails from "../components/BloodRequests/BloodRequestsDetails";
 import PaymentSuccess from "../components/Payment/PaymentSuccess";
 import MyBloodRequests from "../pages/Dashboard/Donor/MyBloodRequests";
+import { locationLoader } from "../loaders/locationLoader";
+import GiveFund from "../pages/GiveFund/GiveFund";
 
 export const router = createBrowserRouter([
   {
@@ -37,6 +39,10 @@ export const router = createBrowserRouter([
         element: <BloodRequestsDetails />,
       },
       {
+        path: "/give-fund",
+        element: <GiveFund />,
+      },
+      {
         path: "/payment-success/",
         element: <PaymentSuccess />,
       },
@@ -48,7 +54,7 @@ export const router = createBrowserRouter([
   },
 
   { path: "/login", element: <Login /> },
-  { path: "/signup", element: <SignUp /> },
+  { path: "/signup", loader: locationLoader, element: <SignUp /> },
 
   {
     path: "/dashboard",
@@ -65,6 +71,7 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/create-request",
         element: <CreateRequest />,
+        loader: locationLoader,
       },
       {
         path: "/dashboard/all-blood-requests",

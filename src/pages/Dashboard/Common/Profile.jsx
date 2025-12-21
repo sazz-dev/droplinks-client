@@ -4,9 +4,14 @@ import { useForm } from "react-hook-form";
 import FormInput from "../../../components/Shared/FormInput";
 import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 import Icon from "../../../components/Shared/Icon";
+import useRole from "../../../hooks/useRole";
 
 const Profile = () => {
   const { user, loading } = useAuth();
+  const { role, isRoleLoading } = useRole();
+
+  // console.log(role, isRoleLoading);
+
   const {
     register,
     handleSubmit,
@@ -39,11 +44,14 @@ const Profile = () => {
             src={user.photoURL}
             alt=""
           />
-          <Icon
+          <h4 className="absolute right-15 -bottom-4 px-4 py-2 rounded-full text-white border-3 bg-[#F43F5E]">
+            {role} 
+          </h4>
+          {/* <Icon
             className="absolute right-4 -bottom-1 p-2 rounded-full text-white border-3 bg-[#F43F5E]"
             name="camera-bold"
             size={50}
-          />
+          /> */}
         </div>
       </div>
 

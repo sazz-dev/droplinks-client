@@ -35,7 +35,7 @@ const FundAddModal = ({ closeModal, isOpen }) => {
     <Dialog
       open={isOpen}
       as="div"
-      className="relative z-10 focus:outline-none "
+      className="relative z-60 focus:outline-none "
       onClose={closeModal}
     >
       <div className="fixed inset-0 z-10 bg-black/30  w-screen overflow-y-auto">

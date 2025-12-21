@@ -55,20 +55,22 @@ const Navbar = () => {
         </nav>
         {/* --------------------- User State Management --------------------- */}
         <div className="z-11 flex gap-2">
+          <Button label={"Give Fund"} outline={true} to='/give-fund' iconName="give-outline" />
           {user ? (
             <div
               onClick={() => setOpen(!open)}
               className="relative w-fit p-0.5 rounded-full"
             >
               <div className="rounded-full">
-                <img
-                  className="rounded-full w-10 h-10 cursor-pointer object-cover"
-                  src={user.photoURL}
-                  referrerPolicy="no-referrer"
-                  alt="user"
-                />
+                <div className="flex gap-2">
+                  <img
+                    className="rounded-full w-10 h-10 cursor-pointer object-cover"
+                    src={user.photoURL}
+                    referrerPolicy="no-referrer"
+                    alt="user"
+                  />
+                </div>
               </div>
-
               {open && (
                 <div className=" absolute z-10 top-full left-1/2 -translate-x-1/2 md:left-auto md:right-0 md:translate-x-0 / rounded-2xl p-2 mx-auto mt-2 w-56 shadow-2xl bg-[#ffffff]">
                   <Link to="/dashboard/profile">
@@ -92,11 +94,6 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="flex gap-2">
-              <Button
-                label={"Fund Now"}
-                outline={true}
-                iconName="give-outline"
-              />
               <Button
                 className="w-35"
                 label={"Login"}

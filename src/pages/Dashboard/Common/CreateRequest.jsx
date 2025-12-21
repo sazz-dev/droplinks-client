@@ -5,11 +5,11 @@ import { useForm } from "react-hook-form";
 import Icon from "../../../components/Shared/Icon";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useLoaderData } from "react-router";
 
 const CreateRequest = () => {
   const { user } = useAuth();
-
-  // useMutation hook
+  const { districts, upazilas } = useLoaderData();
 
   // React Hook Form
   const {
@@ -17,7 +17,13 @@ const CreateRequest = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm();
+
+  const selectedDistrictId = watch("recipientDistrict");
+  const filteredUpazilas = upazilas.filter(
+    (u) => u.district_id === selectedDistrictId
+  );
 
   const onSubmit = async (data) => {
     const requestData = {
@@ -142,10 +148,10 @@ const CreateRequest = () => {
                   register={register}
                   rules={{ required: "District is required" }}
                   error={errors.recipientDistrict}
-                  options={[
-                    { label: "Begumganj", value: "Begumganj" },
-                    { label: "Maijdee", value: "Maijdee" },
-                  ]}
+                  options={districts.map((d) => ({
+                    label: d.name,
+                    value: d.id,
+                  }))}
                 />
                 <FormInput
                   label="Recipient Upazila"
@@ -156,10 +162,11 @@ const CreateRequest = () => {
                   register={register}
                   rules={{ required: "Upazila is required" }}
                   error={errors.recipientUpazila}
-                  options={[
-                    { label: "Begumganj", value: "Begumganj" },
-                    { label: "Maijdee", value: "Maijdee" },
-                  ]}
+                  options={filteredUpazilas.map((u) => ({
+                    label: u.name,
+                    value: u.id,
+                  }))}
+                  disabled={!selectedDistrictId}
                 />
               </div>
             </div>
@@ -183,7 +190,13 @@ const CreateRequest = () => {
                   error={errors.bloodGroup}
                   options={[
                     { label: "A+", value: "A+" },
-                    { label: "Maijdee", value: "Maijdee" },
+                    { label: "A-", value: "A-" },
+                    { label: "B+", value: "B+" },
+                    { label: "B-+", value: "B-+" },
+                    { label: "AB+", value: "AB+" },
+                    { label: "AB-", value: "AB-" },
+                    { label: "O+", value: "O+" },
+                    { label: "O-", value: "O-" },
                   ]}
                 />
                 <FormInput
@@ -197,7 +210,11 @@ const CreateRequest = () => {
                   error={errors.bagCount}
                   options={[
                     { label: "1", value: "1" },
-                    { label: "Maijdee", value: "Maijdee" },
+                    { label: "2", value: "2" },
+                    { label: "3", value: "3" },
+                    { label: "4", value: "4" },
+                    { label: "5", value: "5" },
+                    { label: "6", value: "6" },
                   ]}
                 />
               </div>

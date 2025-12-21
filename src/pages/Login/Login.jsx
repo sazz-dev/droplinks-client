@@ -7,34 +7,39 @@ import { Link, Navigate, useLocation, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../../components/Shared/LoadingSpinner";
+import { saveOrUpdateUser } from "../../utils";
 
 const Login = () => {
+  const { signIn, loading, user, setLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
   const from = location.state?.from?.pathname || "/";
 
-  const { signIn, loading, user, setLoading } = useAuth();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  // Hook Form
+  const { register, handleSubmit } = useForm();
+
+  if (user) return <Navigate to={from} replace={true} />;
 
   const onSubmit = async (data) => {
     const { email, password } = data;
 
     try {
+      // Login
       const { user } = await signIn(email, password);
-      toast.success("Login Successful");
-      navigate(from, { replace: true });
-    } catch (err) {
-      console.error(err);
-      toast.error(err?.message || "Login failed");
-    }
 
-    if (loading) {
-      return <LoadingSpinner />;
+      await saveOrUpdateUser({
+        name: user?.displayName,
+        email: user?.email,
+        image: user?.photoURL,
+      });
+
+      navigate(from, { replace: true });
+      toast.success("Login Successful");
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.message);
+    } finally {
+      setLoading(false); // stop loading
     }
   };
   return (
@@ -84,9 +89,10 @@ const Login = () => {
 
           <button
             type="submit"
-            className="cursor-pointer bg-[#F43F5E] text-white py-3 rounded-2xl w-full"
+            className="cursor-pointer bg-[#F43F5E] text-white py-3 rounded-2xl w-full flex justify-center items-center"
+            disabled={loading} // disable button while loading
           >
-            Login
+            {loading ? <>Loading...</> : "Login"}
           </button>
         </form>
         <p className="text-lg font-light text-[#95959C]">

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Icon from "../../../components/Shared/Icon";
-import FundAddModal from "../../../components/Modal/FundAddModal";
 import { useEffect } from "react";
 import axios from "axios";
 
@@ -10,14 +9,6 @@ const Funding = () => {
 
   const toggleMenu = (index) => {
     setOpenMenu(openMenu === index ? null : index);
-  };
-
-  let [isOpen, setIsOpen] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState(null);
-
-  const closeModal = () => {
-    setIsOpen(false);
-    setSelectedRequest(null);
   };
 
   // Total funds
@@ -48,19 +39,9 @@ const Funding = () => {
           <h2 className="text-lg md:text-4xl font-bold text-[#F43F5E]">
             ${totalFunds.toLocaleString()}
           </h2>
-          <p className="text-lg text-[#565D6A]">Collected </p>
         </div>
 
         <div className="flex flex-col items-end gap-3">
-          <button
-            onClick={() => {
-              setIsOpen(true);
-            }}
-            className="flex gap-2 rounded-2xl cursor-pointer bg-[#F43F5E] text-white px-6 py-3"
-          >
-            <Icon name="love-fill" /> Give Fund
-          </button>
-
           <div className="flex gap-3">
             <select className="border border-[#F4F0F0] rounded-2xl px-3 py-3 text-lg">
               <option>Highest Amount</option>
@@ -154,11 +135,6 @@ const Funding = () => {
           </div>
         ))}
       </div>
-      <FundAddModal
-        isOpen={isOpen}
-        closeModal={closeModal}
-        request={selectedRequest}
-      />
     </section>
   );
 };

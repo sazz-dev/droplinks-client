@@ -3,9 +3,20 @@ import { Link, NavLink, Outlet } from "react-router";
 import Icon from "../components/Shared/Icon";
 import Logo from "/logo.svg";
 import useAuth from "../hooks/useAuth";
+import useRole from "../hooks/useRole";
+import MenuItem from "../components/Sidebar/Menu/MenuItem";
+import AdminMenu from "../components/Sidebar/Menu/AdminMenu";
+import VolunteerMenu from "../components/Sidebar/Menu/VolunteerMenu";
+import DonorMenu from "../components/Sidebar/Menu/DonorMenu";
+import FundAddModal from "../components/Modal/FundAddModal";
 
 const DashboardLayout = () => {
   const { user, logOut } = useAuth();
+  const { role, isRoleLoading } = useRole();
+
+  // Modal Fund
+  let [isOpen, setIsOpen] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState(null);
 
   const handleLogOut = () => {
     logOut()
@@ -14,51 +25,12 @@ const DashboardLayout = () => {
         console.log(error);
       });
   };
-  const menuNav = [
-    {
-      label: "Dashboard",
-      to: "/dashboard",
-      icon: <Icon name={"dashboard-outline"} />,
-    },
-    {
-      label: "Create Request",
-      to: "/dashboard/create-request",
-      icon: <Icon name={"createrequest-outline"} />,
-    },
-    {
-      label: "All Blood Requests",
-      to: "/dashboard/all-blood-requests",
-      icon: <Icon name={"bloods-outline"} />,
-    },
-    {
-      label: "My Blood Requests",
-      to: "/dashboard/my-blood-requests",
-      icon: <Icon name={"bloods-outline"} />,
-    },
-    {
-      label: "Funding",
-      to: "/dashboard/funding",
-      icon: <Icon name={"wallet-outline"} />,
-    },
-    {
-      label: "Manage Users",
-      to: "/dashboard/manage-users",
-      icon: <Icon name={"users-outline"} />,
-    },
-  ];
-  const generalNav = [
-    {
-      label: "Profile",
-      to: "/dashboard/profile",
-      icon: <Icon name={"profile-outline"} />,
-    },
-    {
-      label: "Logout",
-      action: handleLogOut,
 
-      icon: <Icon name={"logout-outline"} />,
-    },
-  ];
+  const closeModal = () => {
+    setIsOpen(false);
+    setSelectedRequest(null);
+  };
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <div className="flex  bg-gray-100 h-screen overflow-hidden">
@@ -81,68 +53,50 @@ const DashboardLayout = () => {
           {/* Menu Nav */}
           <div>
             <h6 className="text-sm  text-gray-500">MENU</h6>
-            <ul className="flex flex-col mt-2 gap-2">
-              {menuNav.map((item) => (
-                <li key={item.label}>
-                  <NavLink
-                    to={item.to}
-                    end={item.to === "/dashboard"} // add `end` for exact dashboard match (or set per-item)
-                    className={({ isActive }) =>
-                      `w-full font-light cursor-pointer text-[#606060] flex items-center gap-2 px-4 py-2 rounded-2xl
-                      ${
-                        isActive
-                          ? "font-medium bg-[#F43F5E] text-[#ffffff]"
-                          : "hover:text-[#F43F5E]"
-                      }`
-                    }
-                    onClick={() => setSidebarOpen(false)}
-                  >
-                    {item.icon}
-                    <span>{item.label}</span>
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
+            <nav className="flex flex-col mt-4 gap-2">
+              <MenuItem
+                iconName="dashboard-outline"
+                label="Dashboard"
+                address="/dashboard"
+              />
+              {role === "admin" && <AdminMenu />}
+              {role === "volunteer" && <VolunteerMenu />}
+              {role === "donor" && <DonorMenu />}
+            </nav>
           </div>
 
           {/* GENERAL Nav */}
           <div>
             <h6 className="text-sm  text-gray-500">PROFILE</h6>
-            <ul className="flex flex-col mt-2 gap-2">
-              {generalNav.map((item) => (
-                <li key={item.label}>
-                  {item.to ? (
-                    <NavLink
-                      to={item.to}
-                      className={({ isActive }) =>
-                        `w-full font-light cursor-pointer text-[#606060] flex items-center gap-2 px-4 py-2 rounded-2xl
-          ${
-            isActive
-              ? "font-medium bg-[#F43F5E] text-[#ffffff]"
-              : "hover:text-[#F43F5E]"
-          }`
-                      }
-                      onClick={() => setSidebarOpen(false)}
-                    >
-                      {item.icon}
-                      <span>{item.label}</span>
-                    </NavLink>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        item.action();
-                        setSidebarOpen(false);
-                      }}
-                      className="w-full text-left font-light cursor-pointer text-[#606060] flex items-center gap-2 px-4 py-2 rounded-2xl hover:text-[#F43F5E]"
-                    >
-                      {item.icon}
-                      <span>{item.label}</span>
-                    </button>
-                  )}
-                </li>
-              ))}
-            </ul>
+            <nav className="flex flex-col mt-2 gap-2">
+              <MenuItem
+                iconName="profile-outline"
+                label="Profile"
+                address="/dashboard/profile"
+              />
+
+              <button
+                onClick={handleLogOut}
+                className="flex  items-center gap-2 rounded-2xl px-4 py-2 transform cursor-pointer text-[#606060] hover:text-[#F43F5E]"
+              >
+                <Icon className="" name="logout-outline" /> Logout
+              </button>
+            </nav>
           </div>
+        </div>
+        {/* Funding Card */}
+        <div className="flex flex-col gap-2 border w-full rounded-4xl mt-5 p-5">
+          <h3 className="text-2xl font-bold">Be Part of the Mission</h3>
+          <p>Let us know about your issues.</p>
+
+          <button
+            onClick={() => {
+              setIsOpen(true);
+            }}
+            className="flex gap-2 rounded-2xl cursor-pointer bg-[#F43F5E] text-white px-4 py-2"
+          >
+            <Icon name="love-fill" /> Give Fund
+          </button>
         </div>
       </aside>
       {/* Main Content */}
@@ -180,6 +134,11 @@ const DashboardLayout = () => {
           <Outlet />
         </section>
       </main>
+      <FundAddModal
+        isOpen={isOpen}
+        closeModal={closeModal}
+        request={selectedRequest}
+      />
     </div>
   );
 };

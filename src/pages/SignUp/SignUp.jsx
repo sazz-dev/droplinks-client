@@ -4,13 +4,19 @@ import { useForm } from "react-hook-form";
 import FormInput from "../../components/Shared/FormInput";
 import Logo from "/logo.svg";
 import Icon from "../../components/Shared/Icon";
-import { Link } from "react-router";
-import { imageUpload } from "../../utils";
+import { Link, useLoaderData, useLocation, useNavigate } from "react-router";
+import { imageUpload, saveOrUpdateUser } from "../../utils";
 import useAuth from "../../hooks/useAuth";
-import LoadingSpinner from "../../components/Shared/LoadingSpinner";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
-  const { createUser, updateUserProfile, loading } = useAuth();
+  const { createUser, updateUserProfile, loading, setLoading } = useAuth();
+  const { districts, upazilas } = useLoaderData();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state || "/";
+
+  // Rect Hook Form
   const {
     register,
     handleSubmit,
@@ -18,9 +24,12 @@ const SignUp = () => {
     formState: { errors },
   } = useForm();
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+  // Dynamic District and upazila
+
+  const selectedDistrictId = watch("district");
+  const filteredUpazilas = upazilas.filter(
+    (u) => u.district_id === selectedDistrictId
+  );
 
   const imageFile = watch("image");
   const password = watch("password");
@@ -32,7 +41,6 @@ const SignUp = () => {
     try {
       // 1. Upload image
       const imageURL = await imageUpload(image[0]);
-
       // 2. Create auth user
       const result = await createUser(email, password);
       console.log(result);
@@ -49,22 +57,17 @@ const SignUp = () => {
         upazila,
         role: "donor",
         status: "active",
-        createdAt: new Date(),
       };
 
       // 5. Save to MongoDB
-      const res = await fetch("http://localhost:3000/users", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(userInfo),
-      });
+      await saveOrUpdateUser(userInfo);
 
-      const dataRes = await res.json();
-      console.log("User saved:", dataRes);
+      navigate(from, { replace: true });
+      toast.success("Signup Successful");
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -224,10 +227,10 @@ const SignUp = () => {
               register={register}
               rules={{ required: "Category is required" }}
               error={errors.district}
-              options={[
-                { label: "Dhaka", value: "Dhaka" },
-                { label: "Cumilla", value: "Cumilla" },
-              ]}
+              options={districts.map((d) => ({
+                label: d.name,
+                value: d.id,
+              }))}
             />
             <FormInput
               label="Upazila"
@@ -238,10 +241,11 @@ const SignUp = () => {
               register={register}
               rules={{ required: "Category is required" }}
               error={errors.upazila}
-              options={[
-                { label: "Begumganj", value: "Begumganj" },
-                { label: "Maijdee", value: "Maijdee" },
-              ]}
+              options={filteredUpazilas.map((u) => ({
+                label: u.name,
+                value: u.id,
+              }))}
+              disabled={!selectedDistrictId}
             />
           </div>
 
@@ -285,9 +289,10 @@ const SignUp = () => {
 
           <button
             type="submit"
-            className="cursor-pointer bg-[#F43F5E] text-white py-3 rounded-2xl w-full"
+            className="cursor-pointer bg-[#F43F5E] text-white py-3 rounded-2xl w-full flex justify-center items-center"
+            disabled={loading} // disable button while loading
           >
-            Create Account
+            {loading ? <>Loading...</> : "Create Account"}
           </button>
         </form>
         <p className="text-lg font-light text-[#95959C]">
