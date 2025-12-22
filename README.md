@@ -1,16 +1,122 @@
-# React + Vite
+# 🩸 Blood Donation Application DropLinks
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📖 Project Description
 
-Currently, two official plugins are available:
+The **Blood Donation Application** is a full-stack MERN-based platform that connects blood donors with recipients in need.  
+It provides role-based dashboards for **Donors**, **Volunteers**, and **Admins**, enabling secure blood request management, donor searching, and funding support.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project focuses on:
 
-## React Compiler
+- Clean UI/UX
+- Secure authentication & authorization
+- Real-world dashboard functionality
+- Scalable backend architecture
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🎯 Project Objective
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Create a centralized blood donation system
+- Allow donors to request and donate blood easily
+- Enable admins to manage users and requests efficiently
+- Implement funding support with Stripe
+- Ensure secure and smooth production deployment
+
+---
+
+## 🌐 Live Site
+
+- **Frontend Live Link:** [DropLinks](https://droplinks.pages.dev/)
+
+---
+
+## 👥 User Roles & Features
+
+### 🩸 Donor
+
+- Register & login
+- Update profile information
+- Create, edit & delete blood donation requests
+- View personal donation requests
+- Search donors by blood group & location
+- Confirm donation (status update)
+
+### 🤝 Volunteer
+
+- View all donation requests
+- Filter donation requests
+- Update donation status only
+
+### 🌐 Admin
+
+- Manage all users (block / unblock)
+- Assign roles (donor → volunteer / admin)
+- Manage all donation requests
+- View total users, total requests & total funding
+- Access funding history
+
+---
+
+## 🧩 Core Features
+
+- Email & password authentication
+- JWT protected private routes & APIs
+- Role-based dashboard access
+- Responsive sidebar dashboard
+- Donation request lifecycle  
+  `pending → inprogress → done / canceled`
+- Public donor search
+- Stripe payment integration
+- Pagination & filtering where required
+- Fully responsive design
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- React (Vite)
+- React Router
+- Tailwind CSS
+- Firebase Authentication
+- TanStack React Query
+- Axios
+- React Hook Form
+- Framer Motion
+- Headless UI
+- React Toast & Hot Toast
+
+### Backend
+
+- Node.js
+- Express.js
+- MongoDB
+- Firebase Admin SDK
+- Stripe Payment Gateway
+- JWT Authentication
+- CORS
+
+---
+
+## 📦 NPM Packages Used
+
+### 📁 Client Side
+
+```json
+{
+  "@headlessui/react": "^2.2.9",
+  "@tailwindcss/vite": "^4.1.18",
+  "@tanstack/react-query": "^5.90.12",
+  "axios": "^1.13.2",
+  "firebase": "^12.6.0",
+  "framer-motion": "^12.23.26",
+  "react": "^19.2.0",
+  "react-dom": "^19.2.0",
+  "react-hook-form": "^7.68.0",
+  "react-hot-toast": "^2.6.0",
+  "react-router": "^7.10.1",
+  "react-toastify": "^11.0.5",
+  "tailwindcss": "^4.1.18"
+}
+```
