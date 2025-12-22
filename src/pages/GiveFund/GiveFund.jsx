@@ -2,18 +2,17 @@ import React from "react";
 import Container from "../../components/Shared/Container";
 import { useState } from "react";
 import { useEffect } from "react";
-import axios from "axios";
-import Icon from "../../components/Shared/Icon";
-import FundAddModal from "../../components/Modal/FundAddModal";
 import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/UseAxiosSecure";
 
 const GiveFund = () => {
+  const axiosSecure = useAxiosSecure();
   const [requests, setRequests] = useState([]);
 
   // Fetch Data
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/funds`)
+    axiosSecure
+      .get(`/funds`)
       .then((response) => {
         setRequests(response.data);
       })
@@ -42,10 +41,7 @@ const GiveFund = () => {
       image: user?.photoURL,
     };
     console.log(fundInfo);
-    const res = await axios.post(
-      `${import.meta.env.VITE_API_URL}/create-checkout-session`,
-      fundInfo
-    );
+    const res = await axiosSecure.post(`/create-checkout-session`, fundInfo);
 
     // Redirect to Stripe
     window.location.href = res.data.url;

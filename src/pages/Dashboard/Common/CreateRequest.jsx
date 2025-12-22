@@ -3,11 +3,12 @@ import FormInput from "../../../components/Shared/FormInput";
 import useAuth from "../../../hooks/useAuth";
 import { useForm } from "react-hook-form";
 import Icon from "../../../components/Shared/Icon";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { useLoaderData } from "react-router";
+import useAxiosSecure from "../../../hooks/UseAxiosSecure";
 
 const CreateRequest = () => {
+  const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const { districts, upazilas } = useLoaderData();
 
@@ -43,8 +44,8 @@ const CreateRequest = () => {
         status: "Pending",
       };
 
-      const { data: response } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/donation-requests`,
+      const { data: response } = await axiosSecure.post(
+        `/donation-requests`,
         requestData
       );
 

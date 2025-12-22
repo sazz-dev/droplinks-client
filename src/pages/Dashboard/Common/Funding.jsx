@@ -1,9 +1,10 @@
 import { useState } from "react";
 import Icon from "../../../components/Shared/Icon";
 import { useEffect } from "react";
-import axios from "axios";
+import useAxiosSecure from "../../../hooks/UseAxiosSecure";
 
 const Funding = () => {
+  const axiosSecure = useAxiosSecure();
   const [openMenu, setOpenMenu] = useState(null);
   const [requests, setRequests] = useState([]);
 
@@ -18,7 +19,7 @@ const Funding = () => {
 
   // Fetch Data
   useEffect(() => {
-    axios
+    axiosSecure
       .get(`${import.meta.env.VITE_API_URL}/funds`)
       .then((response) => {
         setRequests(response.data);

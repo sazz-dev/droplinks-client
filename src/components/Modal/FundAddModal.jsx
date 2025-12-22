@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import useAuth from "../../hooks/useAuth";
-import axios from "axios";
+import useAxiosSecure from "../../hooks/UseAxiosSecure";
 
 const FundAddModal = ({ closeModal, isOpen }) => {
+  const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const [amount, setAmount] = useState(10);
   const [customAmount, setCustomAmount] = useState("");
@@ -23,10 +24,7 @@ const FundAddModal = ({ closeModal, isOpen }) => {
       image: user?.photoURL,
     };
     console.log(fundInfo);
-    const res = await axios.post(
-      `${import.meta.env.VITE_API_URL}/create-checkout-session`,
-      fundInfo
-    );
+    const res = await axiosSecure.post(`/create-checkout-session`, fundInfo);
 
     // Redirect to Stripe
     window.location.href = res.data.url;

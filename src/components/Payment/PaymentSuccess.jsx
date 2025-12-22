@@ -1,16 +1,17 @@
-import axios from "axios";
 import React from "react";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router";
+import useAxiosSecure from "../../hooks/UseAxiosSecure";
 
 const PaymentSuccess = () => {
+  const axiosSecure = useAxiosSecure();
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
 
   useEffect(() => {
     if (sessionId) {
       // Fetch
-      axios.post(`${import.meta.env.VITE_API_URL}/payment-success`, { sessionId });
+      axiosSecure.post(`/payment-success`, { sessionId });
     }
   }, [sessionId]);
 

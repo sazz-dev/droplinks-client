@@ -1,21 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { useParams } from "react-router";
 import Icon from "../Shared/Icon";
 import LoadingSpinner from "../Shared/LoadingSpinner";
+import useAxiosSecure from "../../hooks/UseAxiosSecure";
 
 const BloodRequestsDetails = () => {
+  const axiosSecure = useAxiosSecure();
   const { id } = useParams();
-  const {
-    data: request = {},
-    isLoading,
-    refetch,
-  } = useQuery({
+  const { data: request = {}, isLoading } = useQuery({
     queryKey: ["request", id],
     queryFn: async () => {
-      const result = await axios(
-        `${import.meta.env.VITE_API_URL}/donation-requests/${id}`
-      );
+      const result = await axiosSecure(`/donation-requests/${id}`);
       return result.data;
     },
   });
