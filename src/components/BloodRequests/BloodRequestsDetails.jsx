@@ -1,13 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import Icon from "../Shared/Icon";
 import LoadingSpinner from "../Shared/LoadingSpinner";
 import useAxiosSecure from "../../hooks/UseAxiosSecure";
-import toast from "react-hot-toast";
+import DonateConfirmModal from "../Modal/DonateConfirmModal";
+import { useState } from "react";
 
 const BloodRequestsDetails = () => {
+  // Details Modal
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [confirmRequest, setConfirmRequest] = useState(null);
+
+  // Close Modal
+  const closeModal = () => {
+    setIsConfirmOpen(false);
+    setConfirmRequest(null);
+  };
+
   const axiosSecure = useAxiosSecure();
-  const navigate = useNavigate();
   const { id } = useParams();
   const { data: request = {}, isLoading } = useQuery({
     queryKey: ["request", id],
@@ -29,21 +39,6 @@ const BloodRequestsDetails = () => {
     requesterName,
     requesterEmail,
   } = request;
-
-  const handleDonateNow = async () => {
-    try {
-      await axiosSecure.patch("/donation-requests", {
-        id,
-        status: "In Progress",
-      });
-
-      toast.success("Status updated to In Progress!");
-      navigate("/dashboard/my-blood-requests");
-    } catch (error) {
-      console.error(error);
-      alert("Failed to update status");
-    }
-  };
 
   if (isLoading) return <LoadingSpinner />;
   return (
@@ -132,7 +127,10 @@ const BloodRequestsDetails = () => {
           {/* CTA */}
           <div className="mt-8 flex flex-col items-center">
             <button
-              onClick={handleDonateNow}
+              onClick={() => {
+                setConfirmRequest(request);
+                setIsConfirmOpen(true);
+              }}
               className="w-full cursor-pointer bg-rose-500 hover:bg-rose-600 transition text-white font-semibold py-3 rounded-xl"
             >
               Donate Now
@@ -144,6 +142,11 @@ const BloodRequestsDetails = () => {
           </div>
         </div>
       </div>
+      <DonateConfirmModal
+        isOpen={isConfirmOpen}
+        closeModal={closeModal}
+        request={confirmRequest}
+      />
     </section>
   );
 };

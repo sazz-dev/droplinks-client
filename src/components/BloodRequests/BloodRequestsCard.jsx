@@ -11,6 +11,7 @@ const BloodRequestsCard = ({ request }) => {
     recipientUpazila,
     requestMessage,
     donationDate,
+    donationTime,
   } = request || {};
   return (
     <div className="w-100 flex flex-col gap-4 p-5 bg-white rounded-4xl shadow-[0_5px_20px_2px_rgba(0,0,0,0.05)]">
@@ -27,7 +28,10 @@ const BloodRequestsCard = ({ request }) => {
         </div>
         <div className="flex items-center gap-2">
           <Icon className="text-[#F43F5E]" size={20} name="event-outline" />
-          <h4 className="text-[#303030] font-light text-lg">{donationDate}</h4>
+          <h4 className="text-[#303030] font-light text-lg">
+            {donationDate} Time:
+            {donationTime}
+          </h4>
         </div>
       </div>
       <p className="text-[#303030] font-light text-lg">{requestMessage}</p>
