@@ -1,15 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Icon from "../../../components/Shared/Icon";
+import useAxiosSecure from "../../../hooks/UseAxiosSecure";
 
 const AdminStatistics = () => {
+  const axiosSecure = useAxiosSecure();
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    totalFunding: 0,
+    totalRequests: 0,
+  });
+
+  useEffect(() => {
+    axiosSecure.get("/admin-stats").then((res) => {
+      setStats({
+        totalUsers: res.data.totalUsers || 0,
+        totalFunding: res.data.totalFunding || 0,
+        totalRequests: res.data.totalRequests || 0,
+      });
+    });
+  }, []);
+
   return (
     <div className="grid grid-cols-3 gap-8">
-      {/* Counter */}
+      {/* Total Users */}
       <div className="bg-white w-full p-5 rounded-4xl">
         <div className="bg-[#f43f5d1c] mb-5 p-4 rounded-full w-15 h-15 flex justify-center items-center text-[#F43F5E]">
           <Icon name="love-fill" />
         </div>
-        <h3 className="text-4xl font-semibold">12,354</h3>
+        <h3 className="text-4xl font-semibold">
+          {stats.totalUsers.toLocaleString()}
+        </h3>
         <div className="mt-2">
           <h4 className="text-2xl font-medium text-[#F43F5E]">Total Users</h4>
           <p className="text-lg font-light">
@@ -17,21 +37,29 @@ const AdminStatistics = () => {
           </p>
         </div>
       </div>
+
+      {/* Total Funding */}
       <div className="bg-white w-full p-5 rounded-4xl">
         <div className="bg-[#f43f5d1c] mb-5 p-4 rounded-full w-15 h-15 flex justify-center items-center text-[#F43F5E]">
           <Icon name="wallet-fill" />
         </div>
-        <h3 className="text-4xl font-semibold">$12,450</h3>
+        <h3 className="text-4xl font-semibold">
+          ${stats.totalFunding.toLocaleString()}
+        </h3>
         <div className="mt-2">
           <h4 className="text-2xl font-medium text-[#F43F5E]">Total Funding</h4>
           <p className="text-lg font-light">Donations collected via Stripe</p>
         </div>
       </div>
+
+      {/* Total Requests */}
       <div className="bg-white w-full p-5 rounded-4xl">
         <div className="bg-[#f43f5d1c] mb-5 p-4 rounded-full w-15 h-15 flex justify-center items-center text-[#F43F5E]">
           <Icon name="blood-fill" />
         </div>
-        <h3 className="text-4xl font-semibold">1,234</h3>
+        <h3 className="text-4xl font-semibold">
+          {stats.totalRequests.toLocaleString()}
+        </h3>
         <div className="mt-2">
           <h4 className="text-2xl font-medium text-[#F43F5E]">
             Total Requests

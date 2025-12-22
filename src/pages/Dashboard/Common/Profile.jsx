@@ -1,153 +1,232 @@
-import React from "react";
-import useAuth from "../../../hooks/useAuth";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import FormInput from "../../../components/Shared/FormInput";
-import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
-import Icon from "../../../components/Shared/Icon";
+import useAuth from "../../../hooks/useAuth";
 import useRole from "../../../hooks/useRole";
+import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 import { useLoaderData } from "react-router";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import toast from "react-hot-toast";
 
 const Profile = () => {
-   const { districts, upazilas } = useLoaderData();
+  const axiosSecure = useAxiosSecure();
   const { user, loading } = useAuth();
   const { role } = useRole();
 
-  // console.log(role, isRoleLoading);
+  const loaderData = useLoaderData() || {};
+  const districts = loaderData.districts || [];
+  const upazilas = loaderData.upazilas || [];
+
+  const [isEdit, setIsEdit] = useState(false);
+  const [dbUser, setDbUser] = useState(null);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { isSubmitting },
   } = useForm();
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+  //  Fetch profile from DATABASE
 
-  const onSubmit = async (data) => {};
+  useEffect(() => {
+    if (user?.email) {
+      axiosSecure.get(`/users/${user.email}`).then((res) => {
+        setDbUser(res.data);
+        reset({
+          name: res.data.name || "",
+          email: res.data.email || "",
+          district: res.data.district || "",
+          upazila: res.data.upazila || "",
+          bloodGroup: res.data.bloodGroup || "",
+        });
+      });
+    }
+  }, [user, axiosSecure, reset]);
+
+  if (loading || !dbUser) return <LoadingSpinner />;
+
+  // Submit updated profile
+
+  const onSubmit = async (data) => {
+    try {
+      await axiosSecure.patch("/users", {
+        name: data.name,
+        district: data.district,
+        upazila: data.upazila,
+        bloodGroup: data.bloodGroup,
+      });
+      toast.success("Profile Updated");
+      // Refetch updated profile
+      const res = await axiosSecure.get(`/users/${user.email}`);
+      setDbUser(res.data);
+      reset(res.data);
+
+      setIsEdit(false);
+    } catch (error) {
+      console.error("Profile update failed:", error);
+    }
+  };
+
+  // Cancel edit
+  const handleCancelEdit = () => {
+    setIsEdit(false);
+    reset({
+      name: dbUser.name,
+      email: dbUser.email,
+      district: dbUser.district,
+      upazila: dbUser.upazila,
+      bloodGroup: dbUser.bloodGroup,
+    });
+  };
 
   return (
-    <section className="w-8/12 mx-auto my-10 flex flex-col gap-5">
-      <div className="p-10 flex flex-col items-center gap-5 rounded-4xl bg-white">
-        <div className="w-full flex justify-between items-start">
-          <div className="w-full">
-            <h2 className="text-4xl pb-1 font-semibold">My Profile</h2>
-            <p className="text-xl font-normal text-black/60 ">
-              Mannage your personal information
-            </p>
+    <section className="w-8/12 mx-auto my-10 flex flex-col gap-6">
+      {/* Header */}
+      <div className="p-10 rounded-4xl bg-white">
+        <div className="flex justify-between items-start">
+          <div>
+            <h2 className="text-4xl font-semibold">My Profile</h2>
+            <p className="text-black/60">Manage your personal information</p>
           </div>
-          <button className="px-4 rounded-lg py-1.5 bg-[#F43F5E] cursor-pointer text-white">
-            Edit
-          </button>
+
+          {!isEdit ? (
+            <button
+              type="button"
+              onClick={() => setIsEdit(true)}
+              className="bg-[#F43F5E] text-white px-4 py-2 rounded-lg"
+            >
+              Edit
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleCancelEdit}
+              className="bg-gray-600 text-white px-4 py-2 rounded-lg"
+            >
+              Cancel Edit
+            </button>
+          )}
         </div>
-        <div className="relative cursor-pointer">
+
+        {/* Avatar */}
+        <div className="flex justify-center mt-8 relative">
           <img
-            className="w-50 h-50 mt-8 rounded-full"
-            src={user.photoURL}
-            alt=""
+            src={user?.photoURL || "/avatar.png"}
+            alt="Profile"
+            className="w-40 h-40 rounded-full object-cover"
           />
-          <h4 className="absolute right-15 -bottom-4 px-4 py-2 rounded-full text-white border-3 bg-[#F43F5E]">
-            {role} 
-          </h4>
-          {/* <Icon
-            className="absolute right-4 -bottom-1 p-2 rounded-full text-white border-3 bg-[#F43F5E]"
-            name="camera-bold"
-            size={50}
-          /> */}
+          <span className="absolute uppercase -bottom-2 border-3 bg-[#F43F5E] text-white px-4 py-1 rounded-full">
+            {role}
+          </span>
         </div>
       </div>
 
-      {/* Edite Form */}
+      {/* Form */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="p-10 flex flex-col gap-5 rounded-4xl bg-white"
+        className="p-10 rounded-4xl bg-white flex flex-col gap-5"
       >
-        <div className="w-full  gap-4 flex justify-between">
-          <FormInput
-            label="Full Name"
-            id="name"
-            name="name"
-            type="text"
-            placeholder="Enter your name"
-            icon="person-outline"
-            error={errors.name}
-            defaultValue={user.displayName}
-            disabled
-            register={register}
-            rules={{
-              required: "Name is required",
-              maxLength: {
-                value: 20,
-                message: "Name can not be 20",
-              },
-            }}
-          />
-          <FormInput
-            label="Email Address"
-            id="email"
-            name="email"
-            type="email"
-            placeholder="Add email address"
-            defaultValue={user.email}
-            disabled
-            icon="mailbox-outline"
-            error={errors.email}
-            register={register}
-            rules={{
-              required: "Email is required",
-            }}
-          />
+        <div className="flex gap-4">
+          {/* Name */}
+          <div className="w-full">
+            <label className="text-xl font-medium">Full Name</label>
+            <input
+              {...register("name")}
+              disabled={!isEdit}
+              className={`w-full border-2 border-[#F4F0F0] p-3 rounded-2xl text-lg outline-none ${
+                !isEdit
+                  ? "bg-gray-100 cursor-not-allowed"
+                  : "bg-white border-[#F4F0F0] focus:border-[#F43F5E]"
+              }`}
+            />
+          </div>
+
+          {/* Email */}
+          <div className="w-full">
+            <label className="text-xl font-medium">Email</label>
+            <input
+              {...register("email")}
+              disabled
+              className="w-full border-2 border-[#F4F0F0] p-3 rounded-2xl text-lg bg-gray-100 cursor-not-allowed"
+            />
+          </div>
         </div>
-        <div className="w-full gap-4 flex justify-between">
-          <FormInput
-            label="District"
-            id="district"
-            name="district"
-            as="select"
-            placeholder="Select District"
-            register={register}
-            rules={{ required: "Category is required" }}
-            error={errors.district}
-            options={[
-              { label: "Dhaka", value: "Dhaka" },
-              { label: "Cumilla", value: "Cumilla" },
-            ]}
-          />
-          <FormInput
-            label="Upazila"
-            id="upazila"
-            name="upazila"
-            as="select"
-            placeholder="Select a blood"
-            register={register}
-            rules={{ required: "Category is required" }}
-            error={errors.upazila}
-            options={[
-              { label: "Begumganj", value: "Begumganj" },
-              { label: "Maijdee", value: "Maijdee" },
-            ]}
-          />
-          <FormInput
-            label="Blood Group"
-            id="bloodGroup"
-            name="bloodGroup"
-            as="select"
-            error={errors.bloodGroup}
-            placeholder="Select a blood"
-            register={register}
-            rules={{ required: "Category is required" }}
-            options={[
-              { label: "A+", value: "A+" },
-              { label: "A-", value: "A-" },
-              { label: "B+", value: "B+" },
-              { label: "B-+", value: "B-+" },
-              { label: "AB+", value: "AB+" },
-              { label: "AB-", value: "AB-" },
-              { label: "O+", value: "O+" },
-              { label: "O-", value: "O-" },
-            ]}
-          />
+
+        <div className="flex gap-4">
+          {/* District */}
+          <div className="w-full">
+            <label className="text-xl font-medium">District</label>
+            <select
+              {...register("district")}
+              disabled={!isEdit}
+              className={`w-full border-2 border-[#F4F0F0] p-3 rounded-2xl text-lg outline-none ${
+                !isEdit
+                  ? "bg-gray-100 cursor-not-allowed"
+                  : "bg-white border-[#F4F0F0] focus:border-[#F43F5E]"
+              }`}
+            >
+              <option value="">Select</option>
+              {districts.map((d) => (
+                <option key={d.value} value={d.value}>
+                  {d.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Upazila */}
+          <div className="w-full">
+            <label className="text-xl font-medium">Upazila</label>
+            <select
+              {...register("upazila")}
+              disabled={!isEdit}
+              className={`w-full border-2 border-[#F4F0F0] p-3 rounded-2xl text-lg outline-none ${
+                !isEdit
+                  ? "bg-gray-100 cursor-not-allowed"
+                  : "bg-white border-[#F4F0F0] focus:border-[#F43F5E]"
+              }`}
+            >
+              <option value="">Select</option>
+              {upazilas.map((u) => (
+                <option key={u.value} value={u.value}>
+                  {u.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Blood Group */}
+          <div className="w-full">
+            <label className="text-xl font-medium">Blood Group</label>
+            <select
+              {...register("bloodGroup")}
+              disabled={!isEdit}
+              className={`w-full border-2 border-[#F4F0F0]  p-3 rounded-2xl text-lg outline-none ${
+                !isEdit
+                  ? "bg-gray-100 cursor-not-allowed"
+                  : "bg-white border-[#F4F0F0] focus:border-[#F43F5E]"
+              }`}
+            >
+              <option value="">Select</option>
+              {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((bg) => (
+                <option key={bg} value={bg}>
+                  {bg}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
+
+        {/* Save */}
+        {isEdit && (
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="bg-[#F43F5E] text-white px-6 py-3 rounded-xl self-start"
+          >
+            {isSubmitting ? "Saving..." : "Save Changes"}
+          </button>
+        )}
       </form>
     </section>
   );
