@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const ManageUsers = () => {
   const [isRoleOpen, setIsRoleOpen] = useState(false);
-  const [roleRequest, setRoleRequest] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
@@ -27,7 +27,6 @@ const ManageUsers = () => {
 
   const closeModal = () => {
     setIsRoleOpen(false);
-    setRoleRequest(null);
   };
 
   const roleStyles = {
@@ -103,7 +102,7 @@ const ManageUsers = () => {
             {users.map((user, index) => (
               <tr
                 key={index}
-                className="border-b border-black/5 hover:bg-gray-50 text-lg"
+                className="border-b cursor-pointer border-black/5 hover:bg-gray-50 text-lg"
               >
                 <td className="py-4 px-3 flex items-center gap-2 font-medium text-[#383c45]">
                   <img
@@ -140,7 +139,7 @@ const ManageUsers = () => {
                 <td className="px-3 text-center relative">
                   <button
                     onClick={() => {
-                      setRoleRequest();
+                      setSelectedUser(user);
                       setIsRoleOpen(true);
                     }}
                     className="p-2 hover:bg-gray-100 cursor-pointer text-black/50 rounded-lg"
@@ -183,7 +182,6 @@ const ManageUsers = () => {
 
             <button
               onClick={() => {
-                setRoleRequest();
                 setIsRoleOpen(true);
               }}
               className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100"
@@ -194,9 +192,10 @@ const ManageUsers = () => {
         ))}
       </div>
       <RoleUpdateModal
+        user={selectedUser}
+        refetch={refetch}
         isOpen={isRoleOpen}
         closeModal={closeModal}
-        request={roleRequest}
       />
     </div>
   );

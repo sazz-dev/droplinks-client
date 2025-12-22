@@ -27,7 +27,7 @@ const CreateRequest = () => {
 
   const onSubmit = async (data) => {
     try {
-      // Convert district/upazila IDs to names
+      // Convert district/upazila IDs to names //
       const districtName = districts.find(
         (d) => d.id === data.recipientDistrict
       )?.name;
@@ -56,6 +56,10 @@ const CreateRequest = () => {
       console.error(err);
     }
   };
+
+  // Time
+  const getToday = () => new Date().toISOString().slice(0, 10);
+  const getNowTime = () => new Date().toTimeString().slice(0, 5);
 
   return (
     <section className="w-8/12 mx-auto flex flex-col gap-10  pb-5 mt-20">
@@ -211,6 +215,22 @@ const CreateRequest = () => {
                   ]}
                 />
                 <FormInput
+                  label="Full Address Line"
+                  id="addressLine"
+                  name="addressLine"
+                  type="text"
+                  placeholder="Enter donation loacation full address"
+                  error={errors.addressLine}
+                  register={register}
+                  rules={{
+                    required: "Address Line is required",
+                  }}
+                />
+              </div>
+              {/* Address and Donation Date */}
+
+              <div className="flex gap-10">
+                <FormInput
                   label="Bag Needed"
                   id="bagCount"
                   name="bagCount"
@@ -228,29 +248,29 @@ const CreateRequest = () => {
                     { label: "6", value: "6" },
                   ]}
                 />
-              </div>
-              {/* Address and Donation Date */}
 
-              <div className="flex gap-10">
-                <FormInput
-                  label="Full Address Line"
-                  id="addressLine"
-                  name="addressLine"
-                  type="text"
-                  placeholder="Enter donation loacation full address"
-                  error={errors.addressLine}
-                  register={register}
-                  rules={{
-                    required: "Address Line is required",
-                  }}
-                />
                 <FormInput
                   label="Donation Date"
                   id="donationDate"
                   name="donationDate"
                   type="date"
                   placeholder="Enter your name"
+                  defaultValue={getToday()}
                   error={errors.donationDate}
+                  register={register}
+                  rules={{
+                    required: "Donation Date is required",
+                  }}
+                />
+
+                <FormInput
+                  label="Donation Time"
+                  id="donationTime"
+                  name="donationTime"
+                  type="time"
+                  placeholder="Time"
+                  defaultValue={getNowTime()}
+                  error={errors.donationTime}
                   register={register}
                   rules={{
                     required: "Donation Date is required",

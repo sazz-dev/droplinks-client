@@ -19,6 +19,7 @@ import PaymentSuccess from "../components/Payment/PaymentSuccess";
 import MyBloodRequests from "../pages/Dashboard/Donor/MyBloodRequests";
 import { locationLoader } from "../loaders/locationLoader";
 import GiveFund from "../pages/GiveFund/GiveFund";
+import RoleRoute from "./RoleRoute";
 
 export const router = createBrowserRouter([
   {
@@ -78,7 +79,12 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/manage-users",
-        element: <ManageUsers />,
+        element: (
+          <RoleRoute allowedRoles={["admin"]}>
+            {" "}
+            <ManageUsers />
+          </RoleRoute>
+        ),
       },
       {
         path: "/dashboard/create-request",
@@ -87,7 +93,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/all-blood-requests",
-        element: <AllBloodRequests />,
+        element: (
+          <RoleRoute allowedRoles={["admin", "volunteer"]}>
+            <AllBloodRequests />
+          </RoleRoute>
+        ),
       },
       {
         path: "/dashboard/my-blood-requests",
@@ -95,7 +105,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/funding",
-        element: <Funding />,
+        element: (
+          <RoleRoute allowedRoles={["admin"]}>
+            <Funding />
+          </RoleRoute>
+        ),
       },
       {
         path: "/dashboard/profile",

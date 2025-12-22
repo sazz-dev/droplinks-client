@@ -1,12 +1,10 @@
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { useForm } from "react-hook-form";
 import FormInput from "../Shared/FormInput";
-import { useEffect } from "react";
 import useAxiosSecure from "../../hooks/UseAxiosSecure";
-import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
-const RoleUpdateModal = ({ closeModal, isOpen, request }) => {
+const RoleUpdateModal = ({ closeModal, isOpen, user, refetch }) => {
   const axiosSecure = useAxiosSecure();
 
   //   Hook Form
@@ -14,33 +12,22 @@ const RoleUpdateModal = ({ closeModal, isOpen, request }) => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
-  } = useForm();
+  } = useForm({});
 
-  useEffect(() => {
-    if (request) {
-      reset({
-        status: request.status,
-      });
-    }
-  }, [request, reset]);
-
-  // Status Changing
-  const queryClient = useQueryClient();
   const onSubmit = async (data) => {
-    if (!request?._id) return;
-
     try {
-      await axiosSecure.patch("/donation-requests", {
-        id: request._id,
+      await axiosSecure.patch("/update-role", {
+        email: user?.email,
+        role: data.role,
         status: data.status,
       });
 
-      toast.success("Status Updated");
-      queryClient.invalidateQueries(["requests"]);
+      toast.success("User updated successfully!");
+      refetch();
       closeModal();
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to update status");
+    } catch (err) {
+      console.error(err);
+      toast.error(err?.response?.data?.message || "Update failed");
     }
   };
 
@@ -83,11 +70,11 @@ const RoleUpdateModal = ({ closeModal, isOpen, request }) => {
                   placeholder="Select a Role"
                   register={register}
                   rules={{ required: "Required" }}
-                  defaultValue={request?.status}
+                  defaultValue={user?.role}
                   options={[
                     { label: "Donor", value: "Donor" },
                     { label: "Volunteer", value: "Volunteer" },
-                    { label: "Volunteer", value: "Volunteer" },
+                    { label: "Admin", value: "Admin" },
                   ]}
                 />
                 <FormInput
@@ -95,14 +82,14 @@ const RoleUpdateModal = ({ closeModal, isOpen, request }) => {
                   id="status"
                   name="status"
                   as="select"
-                  error={errors.updateStatus}
+                  error={errors.status}
                   placeholder="Select Status"
                   register={register}
                   rules={{ required: "Required" }}
-                  defaultValue={request?.status}
+                  defaultValue={user?.status}
                   options={[
                     { label: "Active", value: "Active" },
-                    { label: "Block", value: "Block" },
+                    { label: "Blocked", value: "Blocked" },
                   ]}
                 />
               </div>
