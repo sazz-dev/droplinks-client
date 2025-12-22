@@ -1,16 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Icon from "../Shared/Icon";
 import LoadingSpinner from "../Shared/LoadingSpinner";
 import useAxiosSecure from "../../hooks/UseAxiosSecure";
+import toast from "react-hot-toast";
 
 const BloodRequestsDetails = () => {
   const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
   const { id } = useParams();
   const { data: request = {}, isLoading } = useQuery({
     queryKey: ["request", id],
     queryFn: async () => {
       const result = await axiosSecure(`/donation-requests/${id}`);
+      console.log(result);
       return result.data;
     },
   });
@@ -26,6 +29,21 @@ const BloodRequestsDetails = () => {
     requesterName,
     requesterEmail,
   } = request;
+
+  const handleDonateNow = async () => {
+    try {
+      await axiosSecure.patch("/donation-requests", {
+        id,
+        status: "In Progress",
+      });
+
+      toast.success("Status updated to In Progress!");
+      navigate("/dashboard/my-blood-requests");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to update status");
+    }
+  };
 
   if (isLoading) return <LoadingSpinner />;
   return (
@@ -113,7 +131,10 @@ const BloodRequestsDetails = () => {
 
           {/* CTA */}
           <div className="mt-8 flex flex-col items-center">
-            <button className="w-full cursor-pointer bg-rose-500 hover:bg-rose-600 transition text-white font-semibold py-3 rounded-xl">
+            <button
+              onClick={handleDonateNow}
+              className="w-full cursor-pointer bg-rose-500 hover:bg-rose-600 transition text-white font-semibold py-3 rounded-xl"
+            >
               Donate Now
             </button>
             <p className="text-md font-light w-85 text-center text-black/60 mt-2">

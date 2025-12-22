@@ -15,11 +15,6 @@ const AdminMenu = () => {
         address="/dashboard/all-blood-requests"
       />
       <MenuItem
-        iconName="bloods-outline"
-        label="My Blood Requests"
-        address="/dashboard/my-blood-requests"
-      />
-      <MenuItem
         iconName="wallet-outline"
         label="Funding"
         address="/dashboard/funding"

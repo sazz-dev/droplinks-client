@@ -7,9 +7,9 @@ import BloodRequestStatusModal from "../../../components/Modal/BloodRequestStatu
 import useAxiosSecure from "../../../hooks/UseAxiosSecure";
 import toast from "react-hot-toast";
 import useAuth from "../../../hooks/useAuth";
+import EditBloodRequestModal from "../../../components/Modal/EditBloodRequestModal";
 
 const MyBloodRequests = () => {
-
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
@@ -19,11 +19,18 @@ const MyBloodRequests = () => {
   const [detailsRequest, setDetailsRequest] = useState(null);
   const [statusRequest, setStatusRequest] = useState(null);
 
+  // Edite Modal
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editRequest, setEditRequest] = useState(null);
+
   const closeModal = () => {
     setIsDetailsOpen(false);
     setIsStatusOpen(false);
     setDetailsRequest(null);
     setStatusRequest(null);
+    //edit
+    setIsEditOpen(false);
+    setEditRequest(null);
   };
 
   // Fetch user-specific requests
@@ -61,7 +68,7 @@ const MyBloodRequests = () => {
       toast.success("Request deleted");
       queryClient.invalidateQueries(["requests", user?.email]);
     } catch (err) {
-      toast.error("Failed to delete request");
+      toast.error("Failed to delete request", err);
     }
   };
 
@@ -194,7 +201,13 @@ const MyBloodRequests = () => {
                         >
                           <Icon name="eye-fill" />
                         </button>
-                        <button className="p-2 text-green-600 hover:bg-green-50 rounded-lg">
+                        <button
+                          onClick={() => {
+                            setEditRequest(request);
+                            setIsEditOpen(true);
+                          }}
+                          className="p-2 text-green-600 hover:bg-green-50 rounded-lg"
+                        >
                           <Icon name="edit-fill" />
                         </button>
                         <button
@@ -273,6 +286,11 @@ const MyBloodRequests = () => {
         isOpen={isStatusOpen}
         closeModal={closeModal}
         request={statusRequest}
+      />
+      <EditBloodRequestModal
+        isOpen={isEditOpen}
+        closeModal={closeModal}
+        request={editRequest}
       />
     </div>
   );

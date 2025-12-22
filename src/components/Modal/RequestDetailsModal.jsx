@@ -3,7 +3,6 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import Icon from "../Shared/Icon";
 
 const RequestDetailsModal = ({ closeModal, isOpen, request }) => {
-
   const {
     recipientName,
     bloodGroup,
@@ -51,7 +50,7 @@ const RequestDetailsModal = ({ closeModal, isOpen, request }) => {
                   <div className="flex flex-col gap-2">
                     <p className="text-md text-black/60">Blood Group</p>
                     <span className="inline-block w-fit mt-1 px-4 py-2 text-sm font-semibold text-white bg-rose-500 rounded-lg">
-                     {bloodGroup}
+                      {bloodGroup}
                     </span>
                   </div>
 
@@ -61,8 +60,8 @@ const RequestDetailsModal = ({ closeModal, isOpen, request }) => {
                       <Icon
                         className="text-[#F43F5E]"
                         name="hospital-outline"
-                      />{hospitalName}
-                      
+                      />
+                      {hospitalName}
                     </p>
                   </div>
 
@@ -71,7 +70,7 @@ const RequestDetailsModal = ({ closeModal, isOpen, request }) => {
 
                     <p className="font-semibold flex gap-1 items-center">
                       <Icon className="text-[#F43F5E]" name="event-outline" />{" "}
-                    {donationDate}
+                      {donationDate}
                     </p>
                   </div>
                 </div>
@@ -102,7 +101,7 @@ const RequestDetailsModal = ({ closeModal, isOpen, request }) => {
                 <div className="mt-6">
                   <p className="text-md text-black/60">Request Message</p>
                   <p className="font-light text-black/70 leading-relaxed mt-1">
-                 {requestMessage}
+                    {requestMessage}
                   </p>
                 </div>
 
@@ -117,17 +116,6 @@ const RequestDetailsModal = ({ closeModal, isOpen, request }) => {
                     <p className="text-sm text-gray-500">Requester Email</p>
                     <p className="font-semibold">{requesterEmail}</p>
                   </div>
-                </div>
-
-                {/* CTA */}
-                <div className="mt-8 flex flex-col items-center">
-                  <button className="w-full cursor-pointer bg-rose-500 hover:bg-rose-600 transition text-white font-semibold py-3 rounded-xl">
-                    Donate Now
-                  </button>
-                  <p className="text-md font-light w-85 text-center text-black/60 mt-2">
-                    Make sure you contact with requester number before click
-                    “Donate Now”
-                  </p>
                 </div>
               </div>
             </div>

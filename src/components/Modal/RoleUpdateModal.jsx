@@ -72,9 +72,9 @@ const RoleUpdateModal = ({ closeModal, isOpen, user, refetch }) => {
                   rules={{ required: "Required" }}
                   defaultValue={user?.role}
                   options={[
-                    { label: "Donor", value: "Donor" },
-                    { label: "Volunteer", value: "Volunteer" },
-                    { label: "Admin", value: "Admin" },
+                    { label: "Donor", value: "donor" },
+                    { label: "Volunteer", value: "volunteer" },
+                    { label: "Admin", value: "admin" },
                   ]}
                 />
                 <FormInput
@@ -88,8 +88,8 @@ const RoleUpdateModal = ({ closeModal, isOpen, user, refetch }) => {
                   rules={{ required: "Required" }}
                   defaultValue={user?.status}
                   options={[
-                    { label: "Active", value: "Active" },
-                    { label: "Blocked", value: "Blocked" },
+                    { label: "Active", value: "active" },
+                    { label: "Blocked", value: "blocked" },
                   ]}
                 />
               </div>
