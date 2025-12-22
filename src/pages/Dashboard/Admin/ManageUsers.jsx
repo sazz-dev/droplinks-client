@@ -158,38 +158,48 @@ const ManageUsers = () => {
 
       {/* ================= MOBILE CARDS ================= */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden px-5">
-        {users.map((item, index) => (
+        {users.map((user, index) => (
           <div
             key={index}
-            className="border border-black/5 rounded-lg p-4 relative"
+            className="border flex justify-between items-start border-black/5 rounded-lg p-4 relative"
           >
-            <p className="font-semibold text-gray-900">{item.users}</p>
-            <p className="text-sm text-gray-500">{item.email}</p>
+            <div>
+              <div>
+                {" "}
+                <img
+                  className="w-14 h-14 rounded-full"
+                  src={user.image}
+                  alt=""
+                />
+                <p className="font-semibold text-gray-900">{user.name}</p>
+                <p className="text-sm text-gray-500">{user.email}</p>
+              </div>
 
-            <div className="flex gap-2 mt-3">
-              <span
-                className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                  roleStyles[item.role]
-                }`}
-              >
-                {item.role}
-              </span>
-              <span
-                className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                  statusStyles[item.status]
-                }`}
-              >
-                {item.status}
-              </span>
+              <div className="flex gap-2 mt-3">
+                <span
+                  className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                    roleStyles[user.role]
+                  }`}
+                >
+                  {user.role}
+                </span>
+                <span
+                  className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                    statusStyles[user.status]
+                  }`}
+                >
+                  {user.status}
+                </span>
+              </div>
             </div>
-
             <button
               onClick={() => {
+                setSelectedUser(user);
                 setIsRoleOpen(true);
               }}
-              className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100"
+              className="p-2 hover:bg-gray-100 cursor-pointer text-black/50 rounded-lg"
             >
-              <Icon size={30} name="three-dots-circle" />
+              <Icon size={35} name="three-dots-circle" />
             </button>
           </div>
         ))}

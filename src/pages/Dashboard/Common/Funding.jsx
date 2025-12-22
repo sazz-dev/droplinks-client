@@ -1,26 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Icon from "../../../components/Shared/Icon";
-import { useEffect } from "react";
 import useAxiosSecure from "../../../hooks/UseAxiosSecure";
 
 const Funding = () => {
   const axiosSecure = useAxiosSecure();
-  const [openMenu, setOpenMenu] = useState(null);
   const [requests, setRequests] = useState([]);
-
-  const toggleMenu = (index) => {
-    setOpenMenu(openMenu === index ? null : index);
-  };
 
   // Total funds
   const totalFunds = requests.reduce((sum, request) => {
-    return sum + Number(request.amountTotal); // make sure it's a number
+    return sum + Number(request.amountTotal);
   }, 0);
 
   // Fetch Data
   useEffect(() => {
     axiosSecure
-      .get(`${import.meta.env.VITE_API_URL}/funds`)
+      .get(`/funds`)
       .then((response) => {
         setRequests(response.data);
       })
@@ -29,34 +23,32 @@ const Funding = () => {
       });
   }, []);
 
-  console.log(requests);
-
   return (
-    <section className="md:w-11/12 mx-auto bg-white rounded-4xl md:mt-10">
+    <section className="w-full md:w-11/12 mx-auto bg-white rounded-4xl mt-6 md:mt-10 px-4 sm:px-6 md:px-0">
       {/* ================= HEADER ================= */}
-      <div className="flex flex-col gap-4 px-10 pt-10 md:flex-row md:items-center md:justify-between mb-6">
+      <div className="flex flex-col gap-6 px-2 sm:px-6 md:px-10 pt-6 md:pt-10 md:flex-row md:items-center md:justify-between mb-6">
         <div className="flex flex-col gap-2">
-          <h5 className="text-2xl">Total Funds Raised</h5>
-          <h2 className="text-lg md:text-4xl font-bold text-[#F43F5E]">
+          <h5 className="text-lg sm:text-2xl">Total Funds Raised</h5>
+          <h2 className="text-2xl sm:text-4xl font-bold text-[#F43F5E]">
             ${totalFunds.toLocaleString()}
           </h2>
         </div>
 
-        <div className="flex flex-col items-end gap-3">
-          <div className="flex gap-3">
-            <select className="border border-[#F4F0F0] rounded-2xl px-3 py-3 text-lg">
+        <div className="flex flex-col gap-3 w-full md:w-auto">
+          <div className="flex flex-col sm:flex-row gap-3 w-full">
+            <select className="border border-[#F4F0F0] rounded-2xl px-3 py-2 sm:py-3 text-sm sm:text-lg w-full sm:w-auto">
               <option>Highest Amount</option>
               <option>Lowest Amount</option>
               <option>Latest</option>
             </select>
 
-            <div className="relative">
+            <div className="relative w-full sm:w-64">
               <input
                 type="text"
                 placeholder="Search donors..."
-                className="border border-[#F4F0F0] rounded-2xl pl-10 pr-4 py-3 text-lg"
+                className="border border-[#F4F0F0] rounded-2xl pl-10 pr-4 py-2 sm:py-3 text-sm sm:text-lg w-full"
               />
-              <span className="absolute left-3 top-4 text-[#868B94]">
+              <span className="absolute left-3 top-2.5 sm:top-4 text-[#868B94]">
                 <Icon name="search-outline" />
               </span>
             </div>
@@ -65,10 +57,10 @@ const Funding = () => {
       </div>
 
       {/* ================= TABLE (DESKTOP) ================= */}
-      <div className="hidden lg:block h-[70vh] overflow-y-auto">
+      <div className="hidden lg:block h-[70vh] overflow-y-auto overflow-x-auto">
         <table className="w-full whitespace-nowrap">
           <thead>
-            <tr className="text-left border-b border-black/8 text-lg">
+            <tr className="text-left border-b border-black/8 text-base lg:text-lg">
               {["Donor Name", "Email", "Amount", "Date", "Transaction ID"].map(
                 (head) => (
                   <th
@@ -86,22 +78,24 @@ const Funding = () => {
             {requests.map((request) => (
               <tr
                 key={request._id}
-                className="border-b border-black/8 cursor-pointer hover:bg-gray-50 text-lg"
+                className="border-b border-black/8 cursor-pointer hover:bg-gray-50 text-base lg:text-lg"
               >
                 <td className="py-4 flex items-center gap-2 px-3 font-medium">
                   <img
-                    className="w-10 object-fill h-10 rounded-full"
+                    className="w-10 h-10 rounded-full object-cover"
                     src={request.payerImage}
                     alt=""
                   />
-                  {request.payerName}{" "}
+                  {request.payerName}
                 </td>
                 <td className="px-3 text-[#565D6A]">{request.payerEmail}</td>
                 <td className="px-3 font-semibold text-[#16A34A]">
                   ${request.amountTotal}
                 </td>
                 <td className="px-3">{request.paymentDate}</td>
-                <td className="px-3 text-[#6B7280]">{request.transactionId}</td>
+                <td className="px-3 text-[#6B7280] break-all">
+                  {request.transactionId}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -109,30 +103,40 @@ const Funding = () => {
       </div>
 
       {/* ================= MOBILE CARDS ================= */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden px-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:hidden px-2 sm:px-5 pb-6">
         {requests.map((request) => (
-          <div key={request._id} className="border rounded-lg p-4 relative">
-            <p className="font-semibold">{request.donorName}</p>
-            <p className="text-sm text-gray-500">{request.email}</p>
+          <div
+            key={request._id}
+            className="border border-black/10 rounded-lg p-4 relative"
+          >
+            <div className="flex justify-between">
+              <div>
+                <p className="font-semibold">{request.payerName}</p>
+                <p className="text-xs sm:text-sm text-gray-500 break-all">
+                  {request.payerEmail}
+                </p>
+              </div>
+              <img
+                className="w-10 h-10 rounded-full object-cover"
+                src={request.payerImage}
+                alt=""
+              />
+            </div>
 
-            <div className="mt-3 space-y-1 text-sm">
+            <div className="mt-3 space-y-1 text-xs sm:text-sm">
               <p>
-                <strong>Amount:</strong> {request.amountTotal}
+                <strong>Amount:</strong>{" "}
+                <span className="text-[#16A34A] font-semibold">
+                  ${request.amountTotal}
+                </span>
               </p>
               <p>
                 <strong>Date:</strong> {request.paymentDate}
               </p>
-              <p>
+              <p className="break-all">
                 <strong>Txn:</strong> {request.transactionId}
               </p>
             </div>
-
-            <button
-              onClick={() => toggleMenu(request)}
-              className="absolute top-4 right-4"
-            >
-              <Icon size={28} name="three-dots-circle" />
-            </button>
           </div>
         ))}
       </div>

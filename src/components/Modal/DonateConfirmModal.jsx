@@ -22,7 +22,7 @@ const DonateConfirmModal = ({ isOpen, closeModal, request, navigate }) => {
 
       toast.success("Status updated to In Progress!");
       closeModal();
-      navigate("/dashboard/my-blood-requests");
+      navigate("/dashboard");
     } catch (error) {
       console.error("Failed to update status:", error.response || error);
       toast.error("Failed to update status");

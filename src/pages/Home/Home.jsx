@@ -59,6 +59,7 @@ const Home = () => {
             </p>
             <div className="flex flex-col md:flex-row gap-2">
               <Button
+                to="/login"
                 className=""
                 label={"Join as Donor"}
                 iconName="arrow-outline"
@@ -66,6 +67,7 @@ const Home = () => {
               />
               <Button
                 label={"Search Donors"}
+                to={"/search-donors"}
                 outline={true}
                 iconName="arrow-outline"
                 iconPosition="right"

@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router";
 import useAxiosSecure from "../../hooks/UseAxiosSecure";
+import Icon from "../Shared/Icon";
 
 const PaymentSuccess = () => {
   const axiosSecure = useAxiosSecure();
@@ -16,9 +17,11 @@ const PaymentSuccess = () => {
   }, [sessionId]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-md p-8 text-center">
-        Icon
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="max-w-md flex items-center justify-center flex-col gap-4 w-full bg-white rounded-4xl p-8 text-center">
+        <div className="p-5 bg-[#F43F5E] rounded-full">
+          <Icon className="text-white" name="check-fill" />
+        </div>
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           Payment Successful!
         </h1>
@@ -27,10 +30,10 @@ const PaymentSuccess = () => {
           successfully.
         </p>
         <a
-          href="/dashboard"
-          className="inline-block px-6 py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors"
+          href="/"
+          className="inline-block px-6 py-3 bg-[#F43F5E] text-white font-semibold rounded-2xl hover:bg-black transition-colors"
         >
-          Go to Dashboard
+          Go to Home
         </a>
       </div>
     </div>

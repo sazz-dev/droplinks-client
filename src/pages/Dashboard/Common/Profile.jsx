@@ -4,17 +4,15 @@ import useAuth from "../../../hooks/useAuth";
 import useRole from "../../../hooks/useRole";
 import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 import { useLoaderData } from "react-router";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
+import useAxiosSecure from "../../../hooks/UseAxiosSecure";
+import FormInput from "../../../components/Shared/FormInput";
 
 const Profile = () => {
   const axiosSecure = useAxiosSecure();
   const { user, loading } = useAuth();
   const { role } = useRole();
-
-  const loaderData = useLoaderData() || {};
-  const districts = loaderData.districts || [];
-  const upazilas = loaderData.upazilas || [];
+  const { districts, upazilas } = useLoaderData();
 
   const [isEdit, setIsEdit] = useState(false);
   const [dbUser, setDbUser] = useState(null);
@@ -23,83 +21,114 @@ const Profile = () => {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { isSubmitting },
   } = useForm();
 
-  //  Fetch profile from DATABASE
+  /* -------------------- Helpers -------------------- */
+  const getDistrictIdByName = (name) =>
+    districts.find((d) => d.name === name)?.id || "";
 
+  const getUpazilaIdByName = (name) =>
+    upazilas.find((u) => u.name === name)?.id || "";
+
+  /* -------------------- Dynamic Select -------------------- */
+  const selectedDistrictId = watch("district");
+
+  const filteredUpazilas = upazilas.filter(
+    (u) => String(u.district_id) === String(selectedDistrictId)
+  );
+
+  /* -------------------- Load User -------------------- */
   useEffect(() => {
     if (user?.email) {
       axiosSecure.get(`/users/${user.email}`).then((res) => {
-        setDbUser(res.data);
+        const data = res.data;
+        setDbUser(data);
+
         reset({
-          name: res.data.name || "",
-          email: res.data.email || "",
-          district: res.data.district || "",
-          upazila: res.data.upazila || "",
-          bloodGroup: res.data.bloodGroup || "",
+          name: data.name || "",
+          email: data.email || "",
+          district: getDistrictIdByName(data.district),
+          upazila: getUpazilaIdByName(data.upazila),
+          bloodGroup: data.bloodGroup || "",
         });
       });
     }
-  }, [user, axiosSecure, reset]);
+  }, [user, axiosSecure, reset, districts, upazilas]);
 
   if (loading || !dbUser) return <LoadingSpinner />;
 
-  // Submit updated profile
-
+  /* -------------------- Submit -------------------- */
   const onSubmit = async (data) => {
     try {
-      await axiosSecure.patch("/users", {
+      const districtName = districts.find(
+        (d) => String(d.id) === String(data.district)
+      )?.name;
+
+      const upazilaName = upazilas.find(
+        (u) => String(u.id) === String(data.upazila)
+      )?.name;
+
+      const payload = {
         name: data.name,
-        district: data.district,
-        upazila: data.upazila,
         bloodGroup: data.bloodGroup,
-      });
+        district: districtName,
+        upazila: upazilaName,
+      };
+
+      await axiosSecure.patch("/users", payload);
       toast.success("Profile Updated");
-      // Refetch updated profile
+
       const res = await axiosSecure.get(`/users/${user.email}`);
       setDbUser(res.data);
-      reset(res.data);
+
+      reset({
+        name: res.data.name,
+        email: res.data.email,
+        district: getDistrictIdByName(res.data.district),
+        upazila: getUpazilaIdByName(res.data.upazila),
+        bloodGroup: res.data.bloodGroup,
+      });
 
       setIsEdit(false);
     } catch (error) {
-      console.error("Profile update failed:", error);
+      console.error(error);
+      toast.error("Update failed");
     }
   };
 
-  // Cancel edit
+  /* -------------------- Cancel Edit -------------------- */
   const handleCancelEdit = () => {
-    setIsEdit(false);
     reset({
       name: dbUser.name,
       email: dbUser.email,
-      district: dbUser.district,
-      upazila: dbUser.upazila,
+      district: getDistrictIdByName(dbUser.district),
+      upazila: getUpazilaIdByName(dbUser.upazila),
       bloodGroup: dbUser.bloodGroup,
     });
+    setIsEdit(false);
   };
 
   return (
-    <section className="w-8/12 mx-auto my-10 flex flex-col gap-6">
+    <section className="w-full sm:w-11/12 lg:w-8/12 mx-auto px-4 sm:px-0 my-10 flex flex-col gap-6">
       {/* Header */}
-      <div className="p-10 rounded-4xl bg-white">
-        <div className="flex justify-between items-start">
+      <div className="p-8 rounded-3xl bg-white">
+        <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-4xl font-semibold">My Profile</h2>
-            <p className="text-black/60">Manage your personal information</p>
+            <h2 className="text-3xl font-semibold">My Profile</h2>
+            <p className="text-gray-500">Manage your personal information</p>
           </div>
 
           {!isEdit ? (
             <button
-              type="button"
               onClick={() => setIsEdit(true)}
-              className="bg-[#F43F5E] text-white px-4 py-2 rounded-lg"
+              className="bg-rose-500 text-white px-4 py-2 rounded-lg"
             >
               Edit
             </button>
           ) : (
             <button
-              type="button"
               onClick={handleCancelEdit}
               className="bg-gray-600 text-white px-4 py-2 rounded-lg"
             >
@@ -108,14 +137,14 @@ const Profile = () => {
           )}
         </div>
 
-        {/* Avatar */}
+        {/* Avatar + Role */}
         <div className="flex justify-center mt-8 relative">
           <img
             src={user?.photoURL || "/avatar.png"}
             alt="Profile"
-            className="w-40 h-40 rounded-full object-cover"
+            className="w-32 h-32 rounded-full object-cover"
           />
-          <span className="absolute uppercase -bottom-2 border-3 bg-[#F43F5E] text-white px-4 py-1 rounded-full">
+          <span className="absolute -bottom-2 uppercase bg-rose-500 text-white px-4 py-1 rounded-full text-xs">
             {role}
           </span>
         </div>
@@ -124,105 +153,64 @@ const Profile = () => {
       {/* Form */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="p-10 rounded-4xl bg-white flex flex-col gap-5"
+        className="p-8 rounded-3xl bg-white flex flex-col gap-5"
       >
-        <div className="flex gap-4">
-          {/* Name */}
-          <div className="w-full">
-            <label className="text-xl font-medium">Full Name</label>
-            <input
-              {...register("name")}
-              disabled={!isEdit}
-              className={`w-full border-2 border-[#F4F0F0] p-3 rounded-2xl text-lg outline-none ${
-                !isEdit
-                  ? "bg-gray-100 cursor-not-allowed"
-                  : "bg-white border-[#F4F0F0] focus:border-[#F43F5E]"
-              }`}
-            />
-          </div>
+        <div className="grid lg:grid-cols-2 gap-4">
+          <FormInput
+            label="Full Name"
+            name="name"
+            register={register}
+            disabled={!isEdit}
+          />
 
-          {/* Email */}
-          <div className="w-full">
-            <label className="text-xl font-medium">Email</label>
-            <input
-              {...register("email")}
-              disabled
-              className="w-full border-2 border-[#F4F0F0] p-3 rounded-2xl text-lg bg-gray-100 cursor-not-allowed"
-            />
-          </div>
+          <FormInput label="Email" name="email" register={register} disabled />
         </div>
 
-        <div className="flex gap-4">
-          {/* District */}
-          <div className="w-full">
-            <label className="text-xl font-medium">District</label>
-            <select
-              {...register("district")}
-              disabled={!isEdit}
-              className={`w-full border-2 border-[#F4F0F0] p-3 rounded-2xl text-lg outline-none ${
-                !isEdit
-                  ? "bg-gray-100 cursor-not-allowed"
-                  : "bg-white border-[#F4F0F0] focus:border-[#F43F5E]"
-              }`}
-            >
-              <option value="">Select</option>
-              {districts.map((d) => (
-                <option key={d.value} value={d.value}>
-                  {d.label}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className="grid lg:grid-cols-2 gap-4">
+          <FormInput
+            label="District"
+            name="district"
+            as="select"
+            register={register}
+            disabled={!isEdit}
+            options={districts.map((d) => ({
+              label: d.name,
+              value: d.id,
+            }))}
+          />
 
-          {/* Upazila */}
-          <div className="w-full">
-            <label className="text-xl font-medium">Upazila</label>
-            <select
-              {...register("upazila")}
-              disabled={!isEdit}
-              className={`w-full border-2 border-[#F4F0F0] p-3 rounded-2xl text-lg outline-none ${
-                !isEdit
-                  ? "bg-gray-100 cursor-not-allowed"
-                  : "bg-white border-[#F4F0F0] focus:border-[#F43F5E]"
-              }`}
-            >
-              <option value="">Select</option>
-              {upazilas.map((u) => (
-                <option key={u.value} value={u.value}>
-                  {u.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Blood Group */}
-          <div className="w-full">
-            <label className="text-xl font-medium">Blood Group</label>
-            <select
-              {...register("bloodGroup")}
-              disabled={!isEdit}
-              className={`w-full border-2 border-[#F4F0F0]  p-3 rounded-2xl text-lg outline-none ${
-                !isEdit
-                  ? "bg-gray-100 cursor-not-allowed"
-                  : "bg-white border-[#F4F0F0] focus:border-[#F43F5E]"
-              }`}
-            >
-              <option value="">Select</option>
-              {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((bg) => (
-                <option key={bg} value={bg}>
-                  {bg}
-                </option>
-              ))}
-            </select>
-          </div>
+          <FormInput
+            label="Upazila"
+            name="upazila"
+            as="select"
+            register={register}
+            disabled={!isEdit || !selectedDistrictId}
+            options={filteredUpazilas.map((u) => ({
+              label: u.name,
+              value: u.id,
+            }))}
+          />
         </div>
 
-        {/* Save */}
+        <FormInput
+          label="Blood Group"
+          name="bloodGroup"
+          as="select"
+          register={register}
+          disabled={!isEdit}
+          options={["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(
+            (bg) => ({
+              label: bg,
+              value: bg,
+            })
+          )}
+        />
+
         {isEdit && (
           <button
             type="submit"
             disabled={isSubmitting}
-            className="bg-[#F43F5E] text-white px-6 py-3 rounded-xl self-start"
+            className="bg-rose-500 text-white px-6 py-3 rounded-xl w-fit"
           >
             {isSubmitting ? "Saving..." : "Save Changes"}
           </button>

@@ -284,9 +284,18 @@ const AllBloodRequests = () => {
             </p>
 
             <div className="flex justify-between items-center mt-4">
-              <span className="px-2 py-1 rounded-full text-xs font-semibold">
-                ADMIN
+              <span
+                onClick={() => {
+                  setStatusRequest(request);
+                  setIsStatusOpen(true);
+                }}
+                className={`px-3 py-2 cursor-pointer rounded-lg text-sm font-semibold ${
+                  statusStyles[request.status] || "bg-gray-200 text-gray-700"
+                }`}
+              >
+                {request.status}
               </span>
+
               <div className="flex gap-2">
                 {request.status === "In Progress" ? (
                   <>
@@ -314,7 +323,13 @@ const AllBloodRequests = () => {
                     >
                       <Icon name="eye-fill" />
                     </button>
-                    <button className="p-2 bg-green-50 text-green-600 rounded-lg">
+                    <button
+                      onClick={() => {
+                        setEditRequest(request);
+                        setIsEditOpen(true);
+                      }}
+                      className="p-2 bg-green-50 text-green-600 rounded-lg"
+                    >
                       <Icon name="edit-fill" />
                     </button>
                     <button
