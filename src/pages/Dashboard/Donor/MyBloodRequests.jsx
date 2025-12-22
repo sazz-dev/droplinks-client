@@ -9,9 +9,12 @@ import toast from "react-hot-toast";
 import useAuth from "../../../hooks/useAuth";
 import EditBloodRequestModal from "../../../components/Modal/EditBloodRequestModal";
 import Swal from "sweetalert2";
+import useRole from "../../../hooks/useRole";
 
 const MyBloodRequests = () => {
   const { user } = useAuth();
+    const { role, isRoleLoading } = useRole();
+
   const [filterStatus, setFilterStatus] = useState("All Requests");
 
   const axiosSecure = useAxiosSecure();
@@ -103,6 +106,7 @@ const MyBloodRequests = () => {
 
   if (isLoading) return <LoadingSpinner />;
   if (isError) return <LoadingSpinner />;
+  if (isRoleLoading) return <LoadingSpinner />;
 
   const statusStyles = {
     Pending: "bg-[#FFEEA9] text-black/70",
@@ -263,7 +267,7 @@ const MyBloodRequests = () => {
       </div>
 
       {/* MOBILE / TABLET */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden px-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden px-5">
         {filteredRequests.map((request) => (
           <div
             key={request._id}
@@ -276,14 +280,17 @@ const MyBloodRequests = () => {
                 </p>
                 <p className="text-sm text-gray-500">{request.addressLine}</p>
               </div>
+
               <span className="bg-[#F43F5E] text-white px-3 py-1 rounded-lg text-sm font-semibold">
                 {request.bloodGroup}
               </span>
             </div>
+
             <p className="text-sm text-gray-500 mt-2">{request.donationDate}</p>
             <p className="text-sm text-gray-500">
               Requester: {request.requesterName}
             </p>
+
             <div className="flex justify-between items-center mt-4">
               <span
                 onClick={() => {
@@ -298,30 +305,59 @@ const MyBloodRequests = () => {
               </span>
 
               <div className="flex gap-2">
-                <button
-                  onClick={() => {
-                    setDetailsRequest(request);
-                    setIsDetailsOpen(true);
-                  }}
-                  className="p-2 bg-teal-50 text-teal-600 rounded-lg"
-                >
-                  <Icon name="eye-fill" />
-                </button>
-                <button
-                  onClick={() => {
-                    setEditRequest(request);
-                    setIsEditOpen(true);
-                  }}
-                  className="p-2 bg-green-50 text-green-600 rounded-lg"
-                >
-                  <Icon name="edit-fill" />
-                </button>
-                <button
-                  onClick={() => handleDeleteRequest(request._id)}
-                  className="p-2 bg-red-50 text-red-600 rounded-lg"
-                >
-                  <Icon name="trash-fill" />
-                </button>
+                {request.status === "In Progress" ? (
+                  <>
+                    <button
+                      onClick={() => handleDone(request._id)}
+                      className="p-2 bg-green-50 text-green-600 rounded-lg"
+                    >
+                      Done
+                    </button>
+                    <button
+                      onClick={() => handleCancel(request._id)}
+                      className="p-2 bg-red-50 text-red-600 rounded-lg"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : role === "admin" ? (
+                  <>
+                    <button
+                      onClick={() => {
+                        setDetailsRequest(request);
+                        setIsDetailsOpen(true);
+                      }}
+                      className="p-2 bg-teal-50 text-teal-600 rounded-lg"
+                    >
+                      <Icon name="eye-fill" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        setEditRequest(request);
+                        setIsEditOpen(true);
+                      }}
+                      className="p-2 bg-green-50 text-green-600 rounded-lg"
+                    >
+                      <Icon name="edit-fill" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteRequest(request._id)}
+                      className="p-2 bg-red-50 text-red-600 rounded-lg"
+                    >
+                      <Icon name="trash-fill" />
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setDetailsRequest(request);
+                      setIsDetailsOpen(true);
+                    }}
+                    className="p-2 bg-teal-50 text-teal-600 rounded-lg"
+                  >
+                    <Icon name="eye-fill" />
+                  </button>
+                )}
               </div>
             </div>
           </div>

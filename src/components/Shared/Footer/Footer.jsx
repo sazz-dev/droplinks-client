@@ -10,11 +10,8 @@ const Footer = () => {
           {/* Brand */}
           <div className="text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start text-2xl font-bold mb-4">
-              <span className="bg-red-500 text-white rounded-md px-2 py-1 mr-2">
-                A
-              </span>
               <span>
-                drop<span className="text-red-500">Link</span>
+                Drop<span className="text-red-500">Links</span>
               </span>
             </div>
             <p className="text-md text-white/60 font-light leading-relaxed">
@@ -86,27 +83,27 @@ const Footer = () => {
           {/* Social */}
           <div className="text-center sm:text-left">
             <h4 className="text-white font-medium text-xl mb-4">Follow Us</h4>
-            <div className="flex justify-center sm:justify-start gap-4">
+            <div className="flex flex-col justify-center sm:justify-start gap-4">
               <a
                 href="#"
                 className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-red-500 hover:text-white transition"
                 aria-label="Discord"
               >
-                D
+                Facebook
               </a>
               <a
                 href="#"
                 className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-red-500 hover:text-white transition"
                 aria-label="Instagram"
               >
-                I
+                Linkdin
               </a>
               <a
                 href="#"
                 className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-red-500 hover:text-white transition"
                 aria-label="Telegram"
               >
-                T
+                Instagram
               </a>
             </div>
           </div>

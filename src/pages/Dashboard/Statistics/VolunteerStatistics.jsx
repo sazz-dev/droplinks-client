@@ -21,7 +21,7 @@ const VolunteerStatistics = () => {
   }, []);
 
   return (
-    <div className="grid grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
       {/* Total Funding */}
       <div className="bg-white w-full p-5 rounded-4xl">
         <div className="bg-[#f43f5d1c] mb-5 p-4 rounded-full w-15 h-15 flex justify-center items-center text-[#F43F5E]">
