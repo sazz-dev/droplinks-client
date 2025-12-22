@@ -8,6 +8,7 @@ import useAxiosSecure from "../../../hooks/UseAxiosSecure";
 import toast from "react-hot-toast";
 import useAuth from "../../../hooks/useAuth";
 import EditBloodRequestModal from "../../../components/Modal/EditBloodRequestModal";
+import Swal from "sweetalert2";
 
 const MyBloodRequests = () => {
   const { user } = useAuth();
@@ -62,13 +63,31 @@ const MyBloodRequests = () => {
 
   // Delete request
   const handleDeleteRequest = async (requestId) => {
-    if (!window.confirm("Are you sure?")) return;
     try {
-      await axiosSecure.delete(`/donation-requests/${requestId}`);
-      toast.success("Request deleted");
-      queryClient.invalidateQueries(["requests", user?.email]);
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          await axiosSecure.delete(`/donation-requests/${requestId}`);
+          toast.success("Request deleted");
+          queryClient.invalidateQueries(["requests", user?.email]);
+
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your request has been deleted.",
+            icon: "success",
+          });
+        }
+      });
     } catch (err) {
-      toast.error("Failed to delete request", err);
+      toast.error("Failed to delete request",err);
     }
   };
 
@@ -150,14 +169,16 @@ const MyBloodRequests = () => {
                   {request.recipientName}
                 </td>
                 <td className="px-3 text-[#565D6A]">
-                  {request.recipientDistrict} {request.recipientUpazila}
+                  {request.recipientDistrict}, {request.recipientUpazila}
                 </td>
                 <td className="px-3">
                   <span className="bg-[#F43F5E] text-white px-3 py-2 rounded-lg text-sm font-semibold">
                     {request.bloodGroup}
                   </span>
                 </td>
-                <td className="px-3 text-[#565D6A]">{request.donationDate}</td>
+                <td className="px-3 text-[#565D6A]">
+                  {request.donationDate}🕘{request.donationTime}
+                </td>
                 <td className="px-3">
                   <span
                     onClick={() => {

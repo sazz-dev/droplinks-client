@@ -148,14 +148,16 @@ const AllBloodRequests = () => {
                   {request.recipientName}
                 </td>
                 <td className="px-3 text-[#565D6A]">
-                  {request.recipientDistrict} {request.recipientUpazila}
+                  {request.recipientDistrict}, {request.recipientUpazila}
                 </td>
                 <td className="px-3">
                   <span className="bg-[#F43F5E] text-white px-3 py-2 rounded-lg text-sm font-semibold">
                     {request.bloodGroup}
                   </span>
                 </td>
-                <td className="px-3 text-[#565D6A]">{request.donationDate}</td>
+                <td className="px-3 text-[#565D6A]">
+                  {request.donationDate}🕘{request.donationTime}
+                </td>
                 <td className="px-3">
                   <span
                     onClick={() => {
