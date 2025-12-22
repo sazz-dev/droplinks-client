@@ -12,6 +12,8 @@ import Swal from "sweetalert2";
 
 const MyBloodRequests = () => {
   const { user } = useAuth();
+  const [filterStatus, setFilterStatus] = useState("All Requests");
+
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
@@ -47,6 +49,12 @@ const MyBloodRequests = () => {
     },
   });
 
+  // Filter Status
+  const filteredRequests =
+    filterStatus === "All Requests"
+      ? requests
+      : requests.filter((r) => r.status === filterStatus);
+
   // Update request status
   const handleUpdateStatus = async (requestId, newStatus) => {
     try {
@@ -72,8 +80,7 @@ const MyBloodRequests = () => {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, delete it!",
-      })
-      .then(async (result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
           await axiosSecure.delete(`/donation-requests/${requestId}`);
           toast.success("Request deleted");
@@ -87,7 +94,7 @@ const MyBloodRequests = () => {
         }
       });
     } catch (err) {
-      toast.error("Failed to delete request",err);
+      toast.error("Failed to delete request", err);
     }
   };
 
@@ -111,10 +118,18 @@ const MyBloodRequests = () => {
         <h2 className="text-lg md:text-2xl font-medium text-gray-900">
           All Blood Donation Requests
         </h2>
-
+        {/* Filter */}
         <div className="flex flex-col sm:flex-row gap-3">
-          <select className="border border-[#F4F0F0] rounded-2xl px-3 py-3 text-lg">
+          <select
+            onChange={(e) => setFilterStatus(e.target.value)}
+            value={filterStatus}
+            className="border border-[#F4F0F0] rounded-2xl px-3 py-3 text-lg"
+          >
             <option>All Requests</option>
+            <option>Pending</option>
+            <option>In Progress</option>
+            <option>Done</option>
+            <option>Canceled</option>
           </select>
 
           <div className="relative">
@@ -160,7 +175,7 @@ const MyBloodRequests = () => {
           </thead>
 
           <tbody>
-            {requests.map((request) => (
+            {filteredRequests.map((request) => (
               <tr
                 key={request._id}
                 className="border-b border-black/5 hover:bg-gray-50 text-lg"
@@ -249,7 +264,7 @@ const MyBloodRequests = () => {
 
       {/* MOBILE / TABLET */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden px-5">
-        {requests.map((request) => (
+        {filteredRequests.map((request) => (
           <div
             key={request._id}
             className="border border-black/5 rounded-lg p-4 hover:shadow-md transition"

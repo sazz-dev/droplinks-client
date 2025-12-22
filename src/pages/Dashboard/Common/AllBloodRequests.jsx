@@ -12,6 +12,8 @@ import EditBloodRequestModal from "../../../components/Modal/EditBloodRequestMod
 const AllBloodRequests = () => {
   const { role, isRoleLoading } = useRole();
   const axiosSecure = useAxiosSecure();
+  const [filterStatus, setFilterStatus] = useState("All Requests");
+
   // Details Modal
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [detailsRequest, setDetailsRequest] = useState(null);
@@ -42,6 +44,12 @@ const AllBloodRequests = () => {
       return result.data;
     },
   });
+
+  // Filter Status
+  const filteredRequests =
+    filterStatus === "All Requests"
+      ? requests
+      : requests.filter((r) => r.status === filterStatus);
 
   const queryClient = useQueryClient();
 
@@ -92,8 +100,16 @@ const AllBloodRequests = () => {
         </h2>
 
         <div className="flex flex-col sm:flex-row gap-3">
-          <select className="border border-[#F4F0F0] rounded-2xl px-3 py-3 text-lg">
+          <select
+            onChange={(e) => setFilterStatus(e.target.value)}
+            value={filterStatus}
+            className="border border-[#F4F0F0] rounded-2xl px-3 py-3 text-lg"
+          >
             <option>All Requests</option>
+            <option>Pending</option>
+            <option>In Progress</option>
+            <option>Done</option>
+            <option>Canceled</option>
           </select>
 
           <div className="relative">
@@ -139,7 +155,7 @@ const AllBloodRequests = () => {
           </thead>
 
           <tbody>
-            {requests.map((request) => (
+            {filteredRequests.map((request) => (
               <tr
                 key={request._id}
                 className="border-b border-black/5 hover:bg-gray-50 text-lg"
@@ -244,7 +260,7 @@ const AllBloodRequests = () => {
 
       {/* ================= MOBILE / TABLET CARDS ================= */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden px-5">
-        {requests.map((request) => (
+        {filteredRequests.map((request) => (
           <div
             key={request._id}
             className="border border-black/5 rounded-lg p-4 hover:shadow-md transition"
