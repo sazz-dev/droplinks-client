@@ -1,14 +1,15 @@
 import React from "react";
+import { Link } from "react-router";
 
 const Footer = () => {
   return (
     <footer className="bg-gradient-to-b from-[#1b1416] to-[#120d0f] text-gray-300">
       <div className="max-w-7xl mx-auto px-6 py-14">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-          
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
-          <div>
-            <div className="flex items-center text-2xl font-bold mb-4">
+          <div className="text-center sm:text-left">
+            <div className="flex items-center justify-center sm:justify-start text-2xl font-bold mb-4">
               <span className="bg-red-500 text-white rounded-md px-2 py-1 mr-2">
                 A
               </span>
@@ -23,58 +24,96 @@ const Footer = () => {
           </div>
 
           {/* Quick Links */}
-          <div>
-            <h4 className="text-white font-medium text-2xl mb-4">Quick Links</h4>
-            <ul className="space-y-3 text-white/60  text-md font-light">
-              <li><a href="/" className="hover:text-red-500 transition">Home</a></li>
-              <li><a href="/about" className="hover:text-red-500 transition">About Us</a></li>
-              <li><a href="/search" className="hover:text-red-500 transition">Search Donors</a></li>
-              <li><a href="/requests" className="hover:text-red-500 transition">Donation Requests</a></li>
+          <div className="text-center sm:text-left">
+            <h4 className="text-white font-medium text-xl mb-4">Quick Links</h4>
+            <ul className="space-y-3 text-white/60 text-md font-light">
+              <li>
+                <Link to="/" className="hover:text-red-500 transition">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" className="hover:text-red-500 transition">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/search-donors"
+                  className="hover:text-red-500 transition"
+                >
+                  Search Donors
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/donation-requests"
+                  className="hover:text-red-500 transition"
+                >
+                  Donation Requests
+                </Link>
+              </li>
             </ul>
           </div>
 
           {/* Resources */}
-          <div>
-            <h4 className="text-white font-medium text-2xl mb-4">Resources</h4>
-             <ul className="space-y-3 text-white/60  text-md font-light">
-              <li><a href="/contact" className="hover:text-red-500 transition">Contact Us</a></li>
-              <li><a href="/fundraise" className="hover:text-red-500 transition">Fund Raise</a></li>
-              <li><a href="/privacy" className="hover:text-red-500 transition">Privacy Policy</a></li>
-              <li><a href="/terms" className="hover:text-red-500 transition">Terms of Service</a></li>
+          <div className="text-center sm:text-left">
+            <h4 className="text-white font-medium text-xl mb-4">Resources</h4>
+            <ul className="space-y-3 text-white/60 text-md font-light">
+              <li>
+                <Link to="/contact" className="hover:text-red-500 transition">
+                  Contact Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/give-fund" className="hover:text-red-500 transition">
+                  Fund Raise
+                </Link>
+              </li>
+              <li>
+                <Link to="/privacy" className="hover:text-red-500 transition">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link to="/terms" className="hover:text-red-500 transition">
+                  Terms of Service
+                </Link>
+              </li>
             </ul>
           </div>
 
           {/* Social */}
-          <div>
-            <h4 className="text-white font-medium text-2xl mb-4">Follow Us</h4>
-            <div className="flex gap-4">
+          <div className="text-center sm:text-left">
+            <h4 className="text-white font-medium text-xl mb-4">Follow Us</h4>
+            <div className="flex justify-center sm:justify-start gap-4">
               <a
                 href="#"
-                className="text-gray-400 hover:text-red-500 transition text-xl"
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-red-500 hover:text-white transition"
                 aria-label="Discord"
               >
-               
+                D
               </a>
               <a
                 href="#"
-                className="text-gray-400 hover:text-red-500 transition text-xl"
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-red-500 hover:text-white transition"
                 aria-label="Instagram"
               >
-              
+                I
               </a>
               <a
                 href="#"
-                className="text-gray-400 hover:text-red-500 transition text-xl"
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-red-500 hover:text-white transition"
                 aria-label="Telegram"
               >
-           
+                T
               </a>
             </div>
           </div>
         </div>
 
         {/* Bottom */}
-        <div className="border-t border-[#2a2225] mt-12 pt-6 text-center font-light text-md text-white/60  ">
+        <div className="border-t border-white/10 mt-12 pt-6 text-center text-sm text-white/60 font-light">
           © 2024 Droplinks. All rights reserved. Saving lives together.
         </div>
       </div>

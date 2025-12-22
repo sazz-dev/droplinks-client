@@ -116,7 +116,7 @@ const Navbar = () => {
               </NavLink>
             ))}
 
-            <div className=" pt-4 border-t space-y-3">
+            <div className=" pt-4 border-t border-black/12 space-y-3">
               <Button className="w-full" label="Give Fund" to="/give-fund" />
               {user ? (
                 <Button

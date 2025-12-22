@@ -14,7 +14,7 @@ const BloodRequestsCard = ({ request }) => {
     donationTime,
   } = request || {};
   return (
-    <div className="w-100 flex flex-col gap-4 p-5 bg-white rounded-4xl shadow-[0_5px_20px_2px_rgba(0,0,0,0.05)]">
+    <div className="w-full flex flex-col gap-4 p-5 bg-white rounded-4xl shadow-[0_5px_20px_2px_rgba(0,0,0,0.05)]">
       <div className="flex items-center justify-between">
         <h4 className="text-2xl font-medium">{recipientName}</h4>
         <span className="bg-[#F43F5E] text-white px-4 py-1 rounded-xl">A+</span>
