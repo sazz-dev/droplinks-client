@@ -9,10 +9,11 @@ import BloodRequestsCard from "../../components/BloodRequests/BloodRequestsCard"
 import FormInput from "../../components/Shared/FormInput";
 import { useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import LoadingSpinner from "../../components/Shared/LoadingSpinner";
+import useAxiosSecure from "../../hooks/UseAxiosSecure";
 
 const Home = () => {
+  const axiosSecure = useAxiosSecure();
   const {
     register,
     handleSubmit,
@@ -30,9 +31,7 @@ const Home = () => {
   } = useQuery({
     queryKey: ["requests"],
     queryFn: async () => {
-      const result = await axios(
-        `${import.meta.env.VITE_API_URL}/donation-requests`
-      );
+      const result = await axiosSecure(`/donation-requests`);
       return result.data;
     },
   });

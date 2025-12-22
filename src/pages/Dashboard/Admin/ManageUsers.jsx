@@ -4,6 +4,7 @@ import RoleUpdateModal from "../../../components/Modal/RoleUpdateModal";
 import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/UseAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
+import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 
 const ManageUsers = () => {
   const [isRoleOpen, setIsRoleOpen] = useState(false);
@@ -24,6 +25,8 @@ const ManageUsers = () => {
     },
   });
   console.log(users);
+
+  if (isLoading) return <LoadingSpinner />;
 
   const closeModal = () => {
     setIsRoleOpen(false);

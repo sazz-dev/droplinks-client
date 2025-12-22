@@ -1,11 +1,11 @@
-import React from "react";
 import BloodRequestsCard from "../../components/BloodRequests/BloodRequestsCard";
 import Container from "../../components/Shared/Container";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import LoadingSpinner from "../../components/Shared/LoadingSpinner";
+import useAxiosSecure from "../../hooks/UseAxiosSecure";
 
 const DonationRequests = () => {
+  const axiosSecure = useAxiosSecure();
   const {
     data: requests,
     isLoading,
@@ -13,9 +13,7 @@ const DonationRequests = () => {
   } = useQuery({
     queryKey: ["requests"],
     queryFn: async () => {
-      const result = await axios(
-        `${import.meta.env.VITE_API_URL}/donation-requests`
-      );
+      const result = await axiosSecure(`/donation-requests`);
       return result.data;
     },
   });

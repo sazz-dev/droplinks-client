@@ -2,7 +2,6 @@ import Icon from "../../../components/Shared/Icon";
 import RequestDetailsModal from "../../../components/Modal/RequestDetailsModal";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 import BloodRequestStatusModal from "../../../components/Modal/BloodRequestStatusModal";
 import useAxiosSecure from "../../../hooks/UseAxiosSecure";
@@ -39,9 +38,7 @@ const AllBloodRequests = () => {
   } = useQuery({
     queryKey: ["requests"],
     queryFn: async () => {
-      const result = await axios(
-        `${import.meta.env.VITE_API_URL}/donation-requests`
-      );
+      const result = await axiosSecure(`/donation-requests`);
       return result.data;
     },
   });
