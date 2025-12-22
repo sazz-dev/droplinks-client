@@ -86,8 +86,10 @@ const SearchDonors = () => {
       <section className="my-18 flex flex-col gap-10">
         <div className="text-center">
           <h2 className="text-xl text-[#F43F5E]">Donors</h2>
-          <h3 className="text-5xl font-semibold">Find Blood Donors</h3>
-          <p className="text-[#424242] text-lg font-light">
+          <h3 className="text-3xl md:text-5xl font-semibold">
+            Find Blood Donors
+          </h3>
+          <p className="text-[#424242] text-lg md:font-light">
             Search donors by location and blood type.
           </p>
         </div>
@@ -95,29 +97,28 @@ const SearchDonors = () => {
         {/* Search Form */}
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="w-5xl mx-auto flex gap-6 justify-center items-end mb-8"
+          className="max-w-5xl w-full mx-auto flex flex-col md:flex-row gap-5"
         >
-          <FormInput
-            label="Blood Group"
-            id="bloodGroup"
-            name="bloodGroup"
-            as="select"
-            register={register}
-            error={errors.bloodGroup}
-            options={[
-              { label: "All Blood Group", value: "All Blood Group" },
-              { label: "A+", value: "A+" },
-              { label: "A-", value: "A-" },
-              { label: "B+", value: "B+" },
-              { label: "B-", value: "B-" },
-              { label: "O+", value: "O+" },
-              { label: "O-", value: "O-" },
-              { label: "AB+", value: "AB+" },
-              { label: "AB-", value: "AB-" },
-            ]}
-          />
-
-          <div className="w-full gap-4 flex justify-between">
+          <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-5">
+            <FormInput
+              label="Blood Group"
+              id="bloodGroup"
+              name="bloodGroup"
+              as="select"
+              register={register}
+              error={errors.bloodGroup}
+              options={[
+                { label: "All Blood Group", value: "All Blood Group" },
+                { label: "A+", value: "A+" },
+                { label: "A-", value: "A-" },
+                { label: "B+", value: "B+" },
+                { label: "B-", value: "B-" },
+                { label: "O+", value: "O+" },
+                { label: "O-", value: "O-" },
+                { label: "AB+", value: "AB+" },
+                { label: "AB-", value: "AB-" },
+              ]}
+            />
             <FormInput
               label="District"
               id="district"
@@ -135,7 +136,6 @@ const SearchDonors = () => {
                 })),
               ]}
             />
-
             <FormInput
               label="Upazila"
               id="upazila"
@@ -156,12 +156,14 @@ const SearchDonors = () => {
             />
           </div>
 
-          <button
-            type="submit"
-            className="bg-[#F43F5E] text-white px-6 py-3 rounded-2xl"
-          >
-            Search
-          </button>
+          <div className="flex items-end">
+            <button
+              type="submit"
+              className="w-full bg-[#F43F5E] text-white px-6 py-4 rounded-2xl"
+            >
+              Search
+            </button>
+          </div>
         </form>
 
         {/* Donors List */}
@@ -182,7 +184,7 @@ const SearchDonors = () => {
         )}
 
         {!loading && filteredDonors.length > 0 && (
-          <div className="w-fit mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {filteredDonors.map((donor) => (
               <SearchDonorsCard key={donor._id} donor={donor} />
             ))}

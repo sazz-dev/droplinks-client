@@ -345,7 +345,7 @@ const Home = () => {
                 iconPosition="right"
               />
             </div>
-            <img src={droplinksBox} alt="" />
+            <img className="pt-14" src={droplinksBox} alt="" />
           </div>
         </Container>
       </section>
