@@ -1,32 +1,28 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
+import { useState } from "react";
 import Icon from "../Shared/Icon";
 import LoadingSpinner from "../Shared/LoadingSpinner";
 import useAxiosSecure from "../../hooks/UseAxiosSecure";
 import DonateConfirmModal from "../Modal/DonateConfirmModal";
-import { useState } from "react";
 
 const BloodRequestsDetails = () => {
-  // Details Modal
+  const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
+  const { id } = useParams();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [confirmRequest, setConfirmRequest] = useState(null);
 
-  // Close Modal
-  const closeModal = () => {
-    setIsConfirmOpen(false);
-    setConfirmRequest(null);
-  };
-
-  const axiosSecure = useAxiosSecure();
-  const { id } = useParams();
   const { data: request = {}, isLoading } = useQuery({
     queryKey: ["request", id],
     queryFn: async () => {
       const result = await axiosSecure(`/donation-requests/${id}`);
-      console.log(result);
       return result.data;
     },
   });
+
+  if (isLoading) return <LoadingSpinner />;
+
   const {
     recipientName,
     bloodGroup,
@@ -40,13 +36,22 @@ const BloodRequestsDetails = () => {
     requesterEmail,
   } = request;
 
-  if (isLoading) return <LoadingSpinner />;
+  const handleOpenModal = () => {
+    setConfirmRequest(request);
+    setIsConfirmOpen(true);
+  };
+
+  const closeModal = () => {
+    setConfirmRequest(null);
+    setIsConfirmOpen(false);
+  };
+
   return (
     <section>
-      <div className="min-h-screen  flex items-center justify-center p-4">
+      <div className="min-h-screen flex items-center justify-center p-4">
         <div className="md:w-9/12 max-w-4xl bg-white rounded-4xl p-6 sm:p-8">
           <div className="flex justify-between mb-8 pb-4 items-end border-b-2 border-black/10">
-            <h3 className="text-2xl font-medium ">Donation Request Details</h3>
+            <h3 className="text-2xl font-medium">Donation Request Details</h3>
           </div>
 
           {/* Header Grid */}
@@ -73,7 +78,6 @@ const BloodRequestsDetails = () => {
 
             <div className="flex flex-col gap-2">
               <p className="text-md text-black/60">Donation Time</p>
-
               <p className="font-semibold flex gap-1 items-center">
                 <Icon className="text-[#F43F5E]" name="event-outline" />{" "}
                 {donationDate}
@@ -82,9 +86,9 @@ const BloodRequestsDetails = () => {
           </div>
 
           {/* Address */}
-          <div className=" flex flex-col gap-2 mt-6">
+          <div className="flex flex-col gap-2 mt-6">
             <p className="text-md text-black/60">Full Address</p>
-            <p className="flex   gap-1 items-center">
+            <p className="flex gap-1 items-center">
               <Icon className="text-[#F43F5E]" name="location-outline" />{" "}
               {addressLine}
             </p>
@@ -96,7 +100,6 @@ const BloodRequestsDetails = () => {
               <p className="text-md text-black/60">District</p>
               <p className="font-semibold">{recipientDistrict}</p>
             </div>
-
             <div className="flex flex-col gap-2">
               <p className="text-md text-black/60">Upazila</p>
               <p className="font-semibold">{recipientUpazila}</p>
@@ -117,36 +120,33 @@ const BloodRequestsDetails = () => {
               <p className="text-sm text-gray-500">Requester Name</p>
               <p className="font-semibold">{requesterName}</p>
             </div>
-
             <div>
               <p className="text-sm text-gray-500">Email</p>
               <p className="font-semibold">{requesterEmail}</p>
             </div>
           </div>
 
-          {/* CTA */}
+          {/* Donate Now */}
           <div className="mt-8 flex flex-col items-center">
             <button
-              onClick={() => {
-                setConfirmRequest(request);
-                setIsConfirmOpen(true);
-              }}
+              onClick={handleOpenModal}
               className="w-full cursor-pointer bg-rose-500 hover:bg-rose-600 transition text-white font-semibold py-3 rounded-xl"
             >
               Donate Now
             </button>
-            <p className="text-md font-light w-85 text-center text-black/60 mt-2">
-              Make sure you contact with requester number before click “Donate
-              Now”
-            </p>
           </div>
         </div>
       </div>
-      <DonateConfirmModal
-        isOpen={isConfirmOpen}
-        closeModal={closeModal}
-        request={confirmRequest}
-      />
+
+      {/* Confirmation Modal */}
+      {confirmRequest && (
+        <DonateConfirmModal
+          isOpen={isConfirmOpen}
+          closeModal={closeModal}
+          request={confirmRequest}
+          navigate={navigate}
+        />
+      )}
     </section>
   );
 };

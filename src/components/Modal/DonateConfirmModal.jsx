@@ -1,68 +1,93 @@
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import toast from "react-hot-toast";
 import useAxiosSecure from "../../hooks/UseAxiosSecure";
-import { useNavigate } from "react-router";
+import useAuth from "../../hooks/useAuth";
+import FormInput from "../Shared/FormInput";
+import { useForm } from "react-hook-form";
 
-const DonateConfirmModal = ({ closeModal, isOpen, request }) => {
+const DonateConfirmModal = ({ isOpen, closeModal, request, navigate }) => {
+  const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
-  const navigate = useNavigate();
+  // Hook Form
+  const { register, handleSubmit } = useForm();
 
-  if (!request) return null;
-
-  const handleDonateNow = async () => {
+  const handleConfirm = async () => {
     try {
+      if (!request?._id) return toast.error("Request ID missing");
+
       await axiosSecure.patch("/donation-requests", {
-        id: request.id,
+        id: request._id,
         status: "In Progress",
       });
 
       toast.success("Status updated to In Progress!");
-      navigate("/dashboard/my-blood-requests");
       closeModal();
+      navigate("/dashboard/my-blood-requests");
     } catch (error) {
-      console.error(error);
+      console.error("Failed to update status:", error.response || error);
       toast.error("Failed to update status");
     }
   };
 
-  return (
-    <Dialog
-      open={isOpen}
-      as="div"
-      className="relative z-60 focus:outline-none"
-      onClose={closeModal}
-    >
-      <div className="fixed inset-0 z-10 bg-black/30 w-screen overflow-y-auto">
-        <div className="flex min-h-full items-center justify-center p-4">
-          <DialogPanel className="w-full max-w-md bg-white p-6 shadow-xl rounded-4xl">
-            <DialogTitle>
-              <div className="flex flex-col gap-2 items-center">
-                <h3 className="text-2xl font-semibold text-center leading-6 text-gray-900">
-                  Support Our Cause
-                </h3>
-                <p className="text-lg font-light text-black/70 mb-5">
-                  Help us save lives with your donation.
-                </p>
-              </div>
-            </DialogTitle>
+  // Donor Data
+  const onSubmit = async (data) => {
+    console.log(data);
+  };
 
-            <div className="flex mt-2 gap-3 justify-around">
-              <button
-                onClick={handleDonateNow}
-                className="w-full cursor-pointer inline-flex justify-center rounded-2xl bg-[#F43F5E] px-4 py-3 text-lg font-medium text-white hover:bg-[#db3a55]"
-              >
-                Confirm
-              </button>
-              <button
-                type="button"
-                className="w-full cursor-pointer inline-flex justify-center rounded-2xl bg-[#2c1f21] px-4 py-3 text-lg font-medium text-white"
-                onClick={closeModal}
-              >
-                Cancel
-              </button>
-            </div>
-          </DialogPanel>
-        </div>
+  return (
+    <Dialog open={isOpen} onClose={closeModal} className="relative z-50">
+      <div className="fixed inset-0 bg-black/30 flex items-center justify-center">
+        <DialogPanel className="bg-white rounded-2xl p-6 w-full max-w-md">
+          <DialogTitle className="text-xl font-semibold text-center">
+            Confirm Donation
+          </DialogTitle>
+          <p className="mt-2 text-center text-gray-600">
+            Are you sure you want to donate to <b>{request.recipientName}</b>?
+          </p>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col items-center"
+          >
+            <FormInput
+              label="Donar Name"
+              id="donarName"
+              name="donarName"
+              type="text"
+              defaultValue={user.displayName}
+              register={register}
+              disabled
+              rules={{
+                required: "Name is required",
+              }}
+            />
+            <FormInput
+              label="Donar Email"
+              id="donarEmail"
+              name="donarEmail"
+              type="email"
+              defaultValue={user.email}
+              register={register}
+              disabled
+              rules={{
+                required: "Name is required",
+              }}
+            />
+          </form>
+          <div className="mt-4 flex gap-4">
+            <button
+              onClick={handleConfirm}
+              className="flex-1 bg-rose-500 text-white py-2 rounded-xl hover:bg-rose-600"
+            >
+              Confirm
+            </button>
+            <button
+              onClick={closeModal}
+              className="flex-1 bg-gray-300 py-2 rounded-xl hover:bg-gray-400"
+            >
+              Cancel
+            </button>
+          </div>
+        </DialogPanel>
       </div>
     </Dialog>
   );
