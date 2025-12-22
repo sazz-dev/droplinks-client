@@ -13,7 +13,7 @@ const DonationRequests = () => {
   } = useQuery({
     queryKey: ["requests"],
     queryFn: async () => {
-      const result = await axiosSecure(`/donation-requests`);
+      const result = await axiosSecure(`/donation-requests/pending`);
       return result.data;
     },
   });
