@@ -66,7 +66,7 @@ const Navbar = () => {
                 />
 
                 {open && (
-                  <div className="absolute right-0 mt-3 w-56 rounded-2xl bg-white shadow-xl p-2">
+                  <div className="absolute z-12 right-0 mt-3 w-56 rounded-2xl bg-white shadow-xl p-2">
                     <Link to="/dashboard/profile">
                       <button className="w-full p-3 rounded-lg hover:bg-gray-100 text-left">
                         Profile
