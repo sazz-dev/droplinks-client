@@ -141,7 +141,7 @@ const DashboardLayout = () => {
         </header>
 
         {/* Content */}
-        <section className="flex-1 overflow-y-auto p-4">
+        <section className="flex-1 overflow-y-auto md:p-4">
           <Outlet />
         </section>
       </main>
