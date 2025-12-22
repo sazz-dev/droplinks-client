@@ -15,6 +15,7 @@ function FormInput({
   rows = 4,
   options = [],
   defaultValue,
+  value,
   disabled = false,
   readOnly = false,
 }) {
@@ -76,6 +77,7 @@ function FormInput({
         {as === "select" && (
           <select
             id={id}
+            value={value}
             defaultValue={defaultValue}
             disabled={disabled}
             {...register(name, rules)}

@@ -41,8 +41,9 @@ const DonateConfirmModal = ({ isOpen, closeModal, request, navigate }) => {
           <DialogTitle className="text-xl font-semibold text-center">
             Confirm Donation
           </DialogTitle>
-          <p className="mt-2 text-center text-gray-600">
-            Are you sure you want to donate to <b>{request.recipientName}</b>?
+          <p className="mt-2 text-center text-lg mb-5 text-black/60">
+            Donate to{" "}
+            <span className="text-red-600">{request.recipientName}</span>
           </p>
           <form
             onSubmit={handleSubmit(onSubmit)}

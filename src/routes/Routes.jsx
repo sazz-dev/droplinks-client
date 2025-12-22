@@ -58,6 +58,7 @@ export const router = createBrowserRouter([
       {
         path: "/search-donors",
         element: <SearchDonors />,
+        loader: locationLoader,
       },
     ],
   },
