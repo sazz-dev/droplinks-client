@@ -1,63 +1,47 @@
-import Button from '../components/Shared/Button/Button'
-import { useNavigate } from 'react-router'
+import Button from "../components/Shared/Button/Button";
+import { useNavigate } from "react-router";
+import errorIcon from "../assets/error.svg";
 
 const ErrorPage = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
-    <section className='bg-white '>
-      <div className='container flex items-center min-h-screen px-6 py-12 mx-auto'>
-        <div className='flex flex-col items-center max-w-sm mx-auto text-center'>
-          <p className='p-3 text-sm font-medium text-lime-500 rounded-full bg-blue-50 '>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              strokeWidth='2'
-              stroke='currentColor'
-              className='w-6 h-6'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                d='M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z'
-              />
-            </svg>
-          </p>
-          <h1 className='mt-3 text-2xl font-semibold text-gray-800  md:text-3xl'>
+    <section className="bg-white min-h-screen flex items-center">
+      <div className="container mx-auto px-4 sm:px-6 py-12">
+        <div className="flex flex-col items-center text-center max-w-md mx-auto">
+          {/* Icon */}
+          <div className="p-14 rounded-full bg-rose-50">
+            <img src={errorIcon} alt="Error" className="w-150 " />
+          </div>
+
+          {/* Text */}
+          <h1 className="mt-4 text-2xl sm:text-2xl md:text-3xl font-semibold text-gray-800">
             Something Went Wrong!
           </h1>
-          <p className='mt-4 text-gray-500 '>Here are some helpful links:</p>
+          <p className="mt-3 text-sm sm:text-base text-gray-500">
+            Here are some helpful links to get you back on track.
+          </p>
 
-          <div className='flex items-center w-full mt-6 gap-x-3 shrink-0 sm:w-auto'>
+          {/* Buttons */}
+          <div className="mt-6 flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
             <button
               onClick={() => navigate(-1)}
-              className='flex items-center justify-center w-1/2 px-5 py-1 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto   hover:bg-gray-100 '
+              className="flex items-center justify-center px-5 py-2 text-sm font-medium text-gray-700 border rounded-lg transition hover:bg-gray-100"
             >
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth='1.5'
-                stroke='currentColor'
-                className='w-5 h-5 rtl:rotate-180 text-lime-500'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18'
-                />
-              </svg>
-
-              <span>Go back</span>
+              <span className="text-[#F43F5E] mr-2">←</span>
+              Go Back
             </button>
 
-            <Button label={'Take Me Home'} onClick={() => navigate('/')} />
+            <Button
+              label="Take Me Home"
+              onClick={() => navigate("/")}
+              className="bg-[#F43F5E] hover:bg-rose-600 text-white"
+            />
           </div>
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default ErrorPage
+export default ErrorPage;

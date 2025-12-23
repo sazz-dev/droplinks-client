@@ -36,16 +36,16 @@ const DonorStatistics = () => {
 
   // Fetch user-specific requests
   const {
-    data: requests = [],
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["requests", user?.email],
-    queryFn: async () => {
-      const result = await axiosSecure(`/my-donation-requests`);
-      return result.data;
-    },
-  });
+  data: requests = [],
+  isLoading,
+  isError,
+} = useQuery({
+  queryKey: ["requests", user?.email],
+  queryFn: async () => {
+    const result = await axiosSecure(`/my-donation-requests`);
+    return result.data.data; 
+  },
+});
 
   // Update request status
   const handleUpdateStatus = async (requestId, newStatus) => {

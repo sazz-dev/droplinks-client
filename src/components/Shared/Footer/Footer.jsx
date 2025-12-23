@@ -10,8 +10,8 @@ const Footer = () => {
           {/* Brand */}
           <div className="text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start text-2xl font-bold mb-4">
-              <span>
-                Drop<span className="text-red-500">Links</span>
+              <span className="text-white text-4xl">
+                Drop<span className="text-[#F43F5E]">Links</span>
               </span>
             </div>
             <p className="text-md text-white/60 font-light leading-relaxed">
@@ -81,32 +81,41 @@ const Footer = () => {
           </div>
 
           {/* Social */}
-          <div className="text-center sm:text-left">
-            <h4 className="text-white font-medium text-xl mb-4">Follow Us</h4>
-            <div className="flex flex-col justify-center sm:justify-start gap-4">
-              <a
-                href="#"
-                className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-red-500 hover:text-white transition"
-                aria-label="Discord"
-              >
-                Facebook
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-red-500 hover:text-white transition"
-                aria-label="Instagram"
-              >
-                Linkdin
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-red-500 hover:text-white transition"
-                aria-label="Telegram"
-              >
-                Instagram
-              </a>
-            </div>
-          </div>
+<div className="text-center sm:text-left">
+  <h4 className="text-white font-medium text-xl mb-4">
+    Follow Us
+  </h4>
+
+  <div className="flex flex-wrap justify-center sm:justify-start gap-3">
+    <a
+      href="#"
+      aria-label="Facebook"
+      className="px-4 py-2 text-sm font-medium text-white rounded-full
+                 bg-white/10 hover:bg-[#F43F5E] transition"
+    >
+      Facebook
+    </a>
+
+    <a
+      href="#"
+      aria-label="LinkedIn"
+      className="px-4 py-2 text-sm font-medium text-white rounded-full
+                 bg-white/10 hover:bg-[#F43F5E] transition"
+    >
+      LinkedIn
+    </a>
+
+    <a
+      href="#"
+      aria-label="Instagram"
+      className="px-4 py-2 text-sm font-medium text-white rounded-full
+                 bg-white/10 hover:bg-[#F43F5E] transition"
+    >
+      Instagram
+    </a>
+  </div>
+</div>
+
         </div>
 
         {/* Bottom */}

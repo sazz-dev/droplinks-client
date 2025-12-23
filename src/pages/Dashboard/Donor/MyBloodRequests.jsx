@@ -10,10 +10,15 @@ import useAuth from "../../../hooks/useAuth";
 import EditBloodRequestModal from "../../../components/Modal/EditBloodRequestModal";
 import Swal from "sweetalert2";
 import useRole from "../../../hooks/useRole";
+import Pagination from "../../../components/Shared/Pagination";
 
 const MyBloodRequests = () => {
   const { user } = useAuth();
-    const { role, isRoleLoading } = useRole();
+  const { role, isRoleLoading } = useRole();
+  // Pagination State
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10); // items per page
+  const [totalPages, setTotalPages] = useState(0);
 
   const [filterStatus, setFilterStatus] = useState("All Requests");
 
@@ -45,11 +50,15 @@ const MyBloodRequests = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["requests", user?.email],
+    queryKey: ["requests", user?.email, page],
     queryFn: async () => {
-      const result = await axiosSecure(`/my-donation-requests`);
-      return result.data;
+      const res = await axiosSecure.get(
+        `/my-donation-requests?page=${page}&limit=${limit}`
+      );
+      setTotalPages(res.data.totalPages); 
+      return res.data.data; 
     },
+    keepPreviousData: true, 
   });
 
   // Filter Status
@@ -264,10 +273,12 @@ const MyBloodRequests = () => {
             ))}
           </tbody>
         </table>
+       <Pagination page={page} totalPages={totalPages} setPage={setPage} />
+
       </div>
 
       {/* MOBILE / TABLET */}
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden px-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden px-5">
         {filteredRequests.map((request) => (
           <div
             key={request._id}

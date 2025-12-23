@@ -19,7 +19,6 @@ const Navbar = () => {
     { to: "/", label: "Home" },
     { to: "/search-donors", label: "Search Donors" },
     { to: "/donation-requests", label: "Donation Requests" },
-    { to: "#contact-us", label: "Contact Us" },
   ];
 
   const baseLink = "text-lg transition-colors duration-200";

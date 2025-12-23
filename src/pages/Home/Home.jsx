@@ -223,7 +223,7 @@ const Home = () => {
       </Container>
       {/* Contact Us Section */}
       <section
-        id="contact-us"
+        id="contact"
         className="md:w-7/12 px-5 mx-auto my-50 flex flex-col md:flex-row justify-center gap-18 "
       >
         <div className="w-full flex flex-col justify-between">
